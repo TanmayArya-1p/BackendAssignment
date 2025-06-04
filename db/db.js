@@ -1,5 +1,7 @@
 import mysql from "mysql2";
 
+// TODO: MAKE A DOCKERCOMPOSE WITH MYSQL AS OTHER SERVICE
+
 const conn = mysql
   .createConnection({
     host: process.env.MYSQL_HOST,
@@ -10,8 +12,4 @@ const conn = mysql
   })
   .promise();
 
-let result = await conn.query("SELECT * FROM users;");
-console.log(result[0]);
-
-conn.destroy();
-// TODO: MAKE A DOCKERCOMPOSE WITH MYSQL AS OTHER SERVICE
+export default conn;

@@ -22,8 +22,8 @@ CREATE TABLE IF NOT EXISTS items (
 CREATE TABLE IF NOT EXISTS orders (
     id INT AUTO_INCREMENT PRIMARY KEY,
     issued_by INT NOT NULL,
-    issued_at DATETIME NOT NULL,
-    status ENUM ('pending', 'preparing', 'served', 'billed') NOT NULL,
+    issued_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    status ENUM ('pending', 'preparing', 'served', 'billed') NOT NULL DEFAULT 'pending',
     billable_amount FLOAT,
     FOREIGN KEY (issued_by) REFERENCES users (id)
 );
@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS payments (
     order_id INT NOT NULL,
     amount FLOAT NOT NULL,
     payer INT NOT NULL,
-    payed_at DATETIME NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     tip FLOAT,
     FOREIGN KEY (order_id) REFERENCES orders (id),
     FOREIGN KEY (payer) REFERENCES users (id)
