@@ -24,12 +24,3 @@ GET /items/:id -> get a single item by id
 DELETE /items/:id -> delete a single item by id (admin privs)
 
 */
-
-let tests = [
-  () => db.User.updateUser(2, "kakanew", "kakanew"),
-  () => db.User.getAllUsers(),
-];
-for (let i = 0; i < tests.length; i++) {
-  let res = await tests[i]();
-  console.log(i, res);
-}
