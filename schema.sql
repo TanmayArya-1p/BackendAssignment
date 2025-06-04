@@ -23,9 +23,20 @@ CREATE TABLE IF NOT EXISTS orders (
     id INT AUTO_INCREMENT PRIMARY KEY,
     issued_by INT NOT NULL,
     issued_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    status ENUM ('pending', 'preparing', 'served', 'billed') NOT NULL DEFAULT 'pending',
+    status ENUM (
+        'pending',
+        'preparing',
+        'served',
+        'billed',
+        'paid'
+    ) NOT NULL DEFAULT 'pending',
     billable_amount FLOAT,
-    FOREIGN KEY (issued_by) REFERENCES users (id)
+    table_no INT,
+    payer INT NULL,
+    paid_at TIMESTAMP NULL,
+    tip FLOAT NULL,
+    FOREIGN KEY (issued_by) REFERENCES users (id),
+    FOREIGN KEY (payer) REFERENCES users (id)
 );
 
 CREATE TABLE IF NOT EXISTS order_items (
@@ -64,17 +75,6 @@ CREATE TABLE IF NOT EXISTS tag_rel (
 CREATE INDEX tag_rel_item_id_idx ON tag_rel (item_id);
 
 CREATE INDEX tag_rel_tag_id_idx ON tag_rel (tag_id);
-
-CREATE TABLE IF NOT EXISTS payments (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    order_id INT NOT NULL,
-    amount FLOAT NOT NULL,
-    payer INT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    tip FLOAT,
-    FOREIGN KEY (order_id) REFERENCES orders (id),
-    FOREIGN KEY (payer) REFERENCES users (id)
-);
 
 -- SUPPOSE I WANT TO FIND ALL ITEMS WITH TAG="HOT"
 -- SELECT * FROM

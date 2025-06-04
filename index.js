@@ -47,7 +47,6 @@ async function userSubmoduleTest() {
   await u2.delete();
   console.log(await db.User.getAllUsers());
 }
-
 async function itemSubmoduleTest() {
   let i1 = new db.Item({
     name: "i1",
@@ -87,4 +86,34 @@ async function itemSubmoduleTest() {
 
   console.log(await db.Item.getAllItems());
 }
-itemSubmoduleTest();
+async function orderSubmoduleTest() {
+  let u1 = new db.User({ username: "u1", password: "u1" });
+  await u1.create();
+  let i1 = new db.Item({
+    name: "i1",
+    description: "i1",
+    price: 1,
+  });
+  await i1.create();
+  let i2 = new db.Item({
+    name: "i2",
+    description: "i2",
+    price: 2,
+  });
+  await i2.create();
+
+  let o1 = new db.Order({
+    issued_by: 1,
+    table_no: 1,
+  });
+  await o1.create();
+
+  await o1.orderItem(i1.id, 2);
+  await o1.orderItem(i2.id, 2);
+
+  console.log(await o1.resolveBillableAmount(true));
+  console.log(await db.Order.getAllOrders());
+
+  await o1.payBill(1, 2);
+  console.log(await db.Order.getAllOrders());
+}

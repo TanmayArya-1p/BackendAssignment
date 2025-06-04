@@ -1,5 +1,5 @@
 import db from "./db.js";
-import * as item from "./item.js";
+import Item from "./item.js";
 
 export default class Order {
   constructor(p) {
@@ -21,30 +21,34 @@ export default class Order {
     }
   }
 
-  static async getOrderedItems(order_id) {
+  async getOrderedItems() {
     let items = await db.query("SELECT * FROM order_items WHERE order_id = ?", [
-      order_id,
+      this.id,
     ]);
     return items[0];
   }
 
-  static async getOrder(order_id) {
+  static async getOrderById(order_id) {
     let order = await db.query("SELECT * FROM orders WHERE id = ?", [order_id]);
-    let items = await Order.getOrderedItems(order_id);
+    let items = await new Order(order_id).getOrderedItems();
     order[0][0].ordered_items = items;
     return new Order(order[0][0]);
   }
 
   async hydrate() {
-    let res = await Order.getOrder(this.id);
+    let res = await Order.getOrderById(this.id);
     Object.assign(this, res);
     this.hydrated = true;
   }
 
   async create() {
-    let orderID = await db.query("INSERT INTO orders (issued_by) VALUES (?)", [
-      this.issued_by,
-    ]);
+    if (!this.issued_by || !this.table_no) {
+      throw new Error("Invalid Parameter");
+    }
+    let orderID = await db.query(
+      "INSERT INTO orders (issued_by, table_no) VALUES (?, ?)",
+      [this.issued_by, this.table_no],
+    );
     this.id = orderID[0].insertId;
     await this.hydrate();
     return this;
@@ -59,13 +63,14 @@ export default class Order {
     await db.query("DELETE FROM orders WHERE id = ?", [this.id]);
   }
 
-  async resolveBill() {
-    let items = await Order.getOrderedItems(this.id);
+  async resolveBillableAmount(resolve_status = false) {
+    let items = await this.getOrderedItems();
     let newOrder = await Order.updateOrder(
       this.id,
-      "billed",
+      resolve_status ? "billed" : this.status,
       items.reduce((prev, a) => a.price + prev, 0),
     );
+
     return newOrder.billable_amount;
   }
 
@@ -87,16 +92,32 @@ export default class Order {
         [status, billable_amount, id],
       );
     }
-    order = await Order.getOrder(id);
+    order = await Order.getOrderById(id);
     return order;
   }
 
-  static async orderItem(order_id, item_id, quantity) {
-    let price = await item.getItemById(item_id);
+  async orderItem(item_id, quantity, instructions = null) {
+    let price = await Item.getItemById(item_id);
     price = price.price * quantity;
     await db.query(
-      "INSERT INTO order_items (order_id, item_id, quantity, price) VALUES (?, ?, ?, ?)",
-      [order_id, item_id, quantity, price],
+      "INSERT INTO order_items (order_id, item_id, quantity, price,instructions) VALUES (?, ?, ?, ?,?)",
+      [this.id, item_id, quantity, price, instructions],
+    );
+  }
+
+  static async getAllOrders() {
+    let orders = await db.query("SELECT * FROM orders");
+    return orders[0].map((order) => new Order(order));
+  }
+
+  async payBill(payer_id, tip) {
+    await this.hydrate();
+    if (this.status != "billed") {
+      throw new Error("Order is not billed yet");
+    }
+    await db.query(
+      "UPDATE orders SET status= ?,payer = ?, tip = ?, paid_at = NOW() WHERE id = ?",
+      ["paid", payer_id, tip, this.id],
     );
   }
 }
