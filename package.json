@@ -4,7 +4,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "reset-schema": "sudo mysql < schema.sql"
+    "reset-schema": "sudo mysql < schema.sql",
+    "test": "node --env-file=.env tests.js",
+    "start": "node --env-file=.env index.js"
   },
   "author": "",
   "license": "ISC",

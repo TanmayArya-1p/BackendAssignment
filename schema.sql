@@ -55,8 +55,7 @@ CREATE INDEX idx_order_item_order ON order_items (order_id);
 CREATE TABLE IF NOT EXISTS refresh_jti (
     jti VARCHAR(36) PRIMARY KEY,
     issued_by INT NOT NULL,
-    expires_at DATETIME NOT NULL,
-    FOREIGN KEY (issued_by) REFERENCES users (id)
+    expires_at BIGINT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS tags (
