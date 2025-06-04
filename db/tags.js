@@ -1,13 +1,14 @@
 import db from "./db.js";
 
 export async function createTag(name) {
-  let id = await db.query("INSERT INTO tags (name) VALUES (?)", [name])
-    .insertId;
-  return id[0][0].id;
+  let id = await db.query("INSERT INTO tags (name) VALUES (?)", [name]);
+  id = id[0].insertId;
+  return id;
 }
 
 export async function getTag(id) {
   let tag = await db.query("SELECT * FROM tags WHERE id = ?", [id]);
+  if (!tag[0][0]) throw new Error(`Tag with ${id} not found`);
   return tag[0][0];
 }
 
@@ -54,10 +55,14 @@ export async function getItemTags(item_id) {
     item_id,
   ]);
   tag_res = tag_res[0];
-  let otpt = tag_res.map(async (a) => {
-    let tag = await getTag(a.tag_id);
-    return [tag.id, tag.name];
-  });
+  let otpt = [];
+  for (let i = 0; i < tag_res.length; i++) {
+    let tag = await getTag(tag_res[i].tag_id);
+    otpt.push([tag.id, tag.name]);
+  }
+  for (let tag of otpt) {
+    await tag;
+  }
   return otpt;
 }
 

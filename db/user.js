@@ -25,10 +25,11 @@ export default class User {
     let res = await User.getUserById(this.id);
     if (!res) throw new Error("User not found");
     Object.assign(this, res);
+    this.hydrated = true;
     return this;
   }
 
-  async createUser() {
+  async create() {
     if (!this.username || !this.password)
       throw new Error("Username and password are required");
 
@@ -37,16 +38,19 @@ export default class User {
     let role = this.role ? this.role : "customer";
 
     let hashedPwd = await bcrypt.hash(password, 10);
-    await db.query(
+    let cid = await db.query(
       "INSERT INTO users (username,password,role) VALUES (?,?,?)",
       [username, hashedPwd, role],
     );
+    cid = cid[0].insertId;
+    this.id = cid;
     await this.hydrateData();
     return this;
   }
 
   static async getUserById(id) {
     let user = await db.query("SELECT * FROM users WHERE id = ?", [id]);
+    if (!user[0][0]) throw new Error(id + " User not found");
     return User.#deriveUser(user[0][0]);
   }
 

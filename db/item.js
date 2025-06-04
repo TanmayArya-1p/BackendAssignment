@@ -29,33 +29,39 @@ export default class Item {
     let newID = await db.query(
       "INSERT INTO items (name, description, price) VALUES (?, ?, ?)",
       [this.name, this.description, this.price],
-    ).insertId;
+    );
+    newID = newID[0].insertId;
+    this.id = newID;
     let item = await Item.getItemById(newID);
-    for (const tag of this.tags) {
-      await tags.giveItemTagByName(item.id, tag);
+    if (this.tags && this.tags.length > 0) {
+      for (const tag of this.tags) {
+        await tags.giveItemTagByName(this.id, tag);
+      }
     }
+
+    this.hydrated = true;
     return this;
   }
 
-  async deleteItem() {
-    await db.query("DELETE FROM items WHERE id = ?", [this.id]);
+  async delete() {
     await tags.deleteAllItemTags(this.id);
+    await db.query("DELETE FROM items WHERE id = ?", [this.id]);
     return this;
   }
 
-  async updateItem(
+  async updateItem({
     name = null,
     description = null,
     price = null,
     updtags = ["NOAC"],
-  ) {
+  }) {
     if (!name) name = this.name;
     if (!description) description = this.description;
     if (!price) price = this.price;
 
     if (updtags.length != 1 || updtags[0] !== "NOAC") {
       let prevItem = this;
-      let diffs = new utils.DiffGenerator(prevItem.tags, updtags);
+      let diffs = new utils.DiffGenerator(prevItem.tags, updtags).calculate();
       for (const newTag of diffs.added) {
         tags.giveItemTagByName(this.id, newTag);
       }
@@ -72,13 +78,16 @@ export default class Item {
     this.name = name;
     this.description = description;
     this.price = price;
+    this.tags = await tags.getItemTags(this.id);
+
     return this;
   }
 
   static async getItemById(id) {
     let item = await db.query("SELECT * FROM items WHERE id = ?", [id]);
-    let tags = await tags.getItemTags(id);
-    item[0][0].tags = tags;
+    if (!item[0][0]) throw new Error("Item not found");
+    let uptags = await tags.getItemTags(id);
+    item[0][0].tags = uptags;
     return Item.#deriveItem(item[0][0]);
   }
 

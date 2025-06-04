@@ -45,9 +45,8 @@ export default class Order {
     let orderID = await db.query("INSERT INTO orders (issued_by) VALUES (?)", [
       this.issued_by,
     ]);
-    orderID = orderID.insertId;
-    let order = await Order.getOrder(orderID);
-    Object.assign(this, order);
+    this.id = orderID[0].insertId;
+    await this.hydrate();
     return this;
   }
 

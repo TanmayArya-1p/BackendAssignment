@@ -14,17 +14,28 @@ export class DiffGenerator {
     let added = [];
     let deleted = [];
     while (i < this.newArr.length && j < this.oldArr.length) {
-      if (this.newArr[i] === this.oldArr[i]) {
+      if (this.newArr[i] === this.oldArr[j]) {
         i++;
         j++;
         continue;
       }
 
-      if (this.newArr[i] < this.oldArr[i]) {
+      if (this.newArr[i] < this.oldArr[j]) {
         added.push(this.newArr[i]);
+        i++;
       } else {
-        deleted.push(this.oldArr[i]);
+        deleted.push(this.oldArr[j]);
+        j++;
       }
+    }
+
+    while (i < this.newArr.length) {
+      added.push(this.newArr[i]);
+      i++;
+    }
+    while (j < this.oldArr.length) {
+      deleted.push(this.oldArr[j]);
+      j++;
     }
 
     return { added: added, deleted: deleted };

@@ -7,6 +7,7 @@ export async function getAllPayments() {
 
 export async function getPaymentById(id) {
   const payment = await db.query("SELECT * FROM payments WHERE id = ?", [id]);
+  if (!payment[0][0]) throw new Error(`Payment id ${id} not found`);
   return payment[0][0];
 }
 
@@ -19,14 +20,15 @@ export async function getPaymentsForOrder(orderId) {
 
 export async function getAmountPayedForOrder(orderId) {
   let payments = await getPaymentsForOrder(orderId);
-  return payments.reduce((curr, prev) => prev + curr, 0);
+  return payments.reduce((prev, curr) => prev + curr, 0);
 }
 
 export async function createPayment(order_id, amount, payer, tip) {
   let inserted_id = await db.query(
     "INSERT INTO payments (order_id,amount, payer, tip) VALUES (?, ?, ?, ?)",
     [order_id, amount, payer, tip],
-  ).insertId;
+  );
+  inserted_id = inserted_id[0].insertId;
   let result = await getPaymentById(inserted_id);
   return result;
 }

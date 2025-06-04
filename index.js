@@ -24,3 +24,67 @@ GET /items/:id -> get a single item by id
 DELETE /items/:id -> delete a single item by id (admin privs)
 
 */
+
+async function userSubmoduleTest() {
+  let u1 = new db.User({ username: "u1", password: "u1" });
+  let u2 = new db.User({ username: "u2", password: "u2" });
+  await u1.create();
+  await u2.create();
+  console.log(await db.User.getAllUsers());
+  u1.delete();
+  u2.delete();
+  console.log(await db.User.getAllUsers());
+  u1.create();
+
+  console.log(await u1.verifyPassword("u1"));
+  console.log(await u1.verifyPassword("u2"));
+  console.log(await db.User.getUserByUsername("u1"));
+
+  console.log(await u1.updateUser("u11", "u11"));
+
+  console.log(await db.User.getAllUsers());
+  await u1.delete();
+  await u2.delete();
+  console.log(await db.User.getAllUsers());
+}
+
+async function itemSubmoduleTest() {
+  let i1 = new db.Item({
+    name: "i1",
+    description: "i1",
+    price: 1,
+    tags: ["tag1", "tag2"],
+  });
+  let i2 = new db.Item({
+    name: "i2",
+    price: 2,
+    description: "i2",
+    tags: ["tag2", "tag3"],
+  });
+  await db.Tags.createTag("tag1");
+  await db.Tags.createTag("tag2");
+  await db.Tags.createTag("tag3");
+  await i1.create();
+  await i2.create();
+  console.log(await db.Item.getAllItems());
+  await i1.delete();
+  await i2.delete();
+  console.log(await db.Item.getAllItems());
+  await i1.create();
+
+  console.log(await db.Item.getItemById(3));
+  let test = new db.Item(3);
+  await test.hydrate();
+  console.log(test);
+
+  console.log(
+    await i1.updateItem({
+      name: "i11",
+      desc: "i11",
+      updtags: ["tag2", "tag3"],
+    }),
+  );
+
+  console.log(await db.Item.getAllItems());
+}
+itemSubmoduleTest();
