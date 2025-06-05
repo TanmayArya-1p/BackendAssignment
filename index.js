@@ -1,9 +1,6 @@
 import express from "express";
 import db from "./db/index.js";
 
-// const app = express();
-// const PORT = 3000;
-
 /*
 PATHS TO MAKE:
 
@@ -25,4 +22,15 @@ DELETE /items/:id -> delete a single item by id (admin privs)
 
 */
 
-db.conn.destroy();
+const app = express();
+const port = 3000;
+
+app.get("/", async (req, res) => {
+  res.send(await db.User.getAllUsers());
+});
+
+app.listen(port, () => {
+  console.log(`App listening on port ${port}`);
+});
+
+// db.conn.destroy();

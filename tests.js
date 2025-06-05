@@ -18,9 +18,9 @@ async function usersSubmoduleTest() {
   console.log(await u1.updateUser("u11", "u11"));
 
   console.log(await db.User.getAllUsers());
-  await u1.delete();
-  await u2.delete();
-  console.log(await db.User.getAllUsers());
+  // await u1.delete();
+  // await u2.delete();
+  // console.log(await db.User.getAllUsers());
 }
 async function itemsSubmoduleTest() {
   let i1 = new db.Item({

@@ -9,7 +9,7 @@ export default class User {
       if (
         this.id &&
         this.username &&
-        this.password &&
+        this.HashedPassword &&
         this.role &&
         this.created_at
       )
@@ -21,10 +21,25 @@ export default class User {
     }
   }
 
+  isHydrated() {
+    if (
+      this.id &&
+      this.username &&
+      this.HashedPassword &&
+      this.role &&
+      this.created_at
+    )
+      this.hydrated = true;
+    return this.hydrated;
+  }
+
   async hydrateData() {
+    let oldpass = this.password;
     let res = await User.getUserById(this.id);
     if (!res) throw new Error("User not found");
     Object.assign(this, res);
+    this.HashedPassword = this.password;
+    this.password = oldpass;
     this.hydrated = true;
     return this;
   }
@@ -38,6 +53,7 @@ export default class User {
     let role = this.role ? this.role : "customer";
 
     let hashedPwd = await bcrypt.hash(password, 10);
+    this.HashedPassword = hashedPwd;
     let cid = await db.query(
       "INSERT INTO users (username,password,role) VALUES (?,?,?)",
       [username, hashedPwd, role],
@@ -54,8 +70,14 @@ export default class User {
     return User.#deriveUser(user[0][0]);
   }
 
-  static async getAllUsers() {
-    let users = await db.query("SELECT * FROM users");
+  static async getAllUsers(limit = 10, offset = 0) {
+    let users = null;
+    if (limit === -1) users = await db.query("SELECT * FROM users");
+    else
+      users = await db.query("SELECT * FROM users LIMIT ? OFFSET ?", [
+        limit,
+        offset,
+      ]);
     return users[0].map((a) => User.#deriveUser(a));
   }
 
@@ -66,13 +88,15 @@ export default class User {
     return User.#deriveUser(user[0][0]);
   }
 
-  async updateUser(username, password, role = "customer") {
+  async updateUser(username, PlainTextPassword, role = "customer") {
+    let hashedPwd = await bcrypt.hash(PlainTextPassword, 10);
     await db.query(
       "UPDATE users SET username = ?, password = ?, role = ? WHERE id = ?",
-      [username, password, role, this.id],
+      [username, hashedPwd, role, this.id],
     );
     this.username = username;
-    this.password = password;
+    this.password = PlainTextPassword;
+    this.HashedPassword = hashedPwd;
     this.role = role;
     return this;
   }
@@ -83,15 +107,17 @@ export default class User {
   }
 
   async verifyPassword(password) {
-    if (!this.hydrated) throw new Error("User data not hydrated");
+    if (!this.isHydrated()) throw new Error("User data not hydrated");
 
-    let compres = await bcrypt.compare(password, this.password);
+    let compres = await bcrypt.compare(password, this.HashedPassword);
     if (compres) return true;
     return false;
   }
 
   static #deriveUser(obj) {
     let us = new User(obj.id);
+    us.HashedPassword = us.password;
+    us.password = "";
     Object.assign(us, obj);
     return us;
   }

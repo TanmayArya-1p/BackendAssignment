@@ -16,6 +16,12 @@ export default class Item {
     }
   }
 
+  isHydrated() {
+    if (this.id && this.name && this.description != undefined && this.price)
+      this.hydrated = true;
+    return this.hydrated;
+  }
+
   async hydrate() {
     let res = await Item.getItemById(this.id);
     Object.assign(this, res);
@@ -91,8 +97,14 @@ export default class Item {
     return Item.#deriveItem(item[0][0]);
   }
 
-  static async getAllItems() {
-    let items = await db.query("SELECT * FROM items");
+  static async getAllItems(limit = 10, offset = 0) {
+    let items = null;
+    if (limit === -1)
+      items = await db.query("SELECT * FROM items LIMIT ? OFFSET ?", [
+        limit,
+        offset,
+      ]);
+    else items = await db.query("SELECT * FROM items");
     for (let i = 0; i < items[0].length; i++)
       items[0][i].tags = await tags.getItemTags(items[0][i].id);
     return items[0].map((a) => Item.#deriveItem(a));

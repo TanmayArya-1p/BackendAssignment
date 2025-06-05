@@ -21,6 +21,18 @@ export default class Order {
     }
   }
 
+  isHydrated() {
+    if (
+      this.id &&
+      this.issued_by &&
+      this.issued_at &&
+      this.status &&
+      Array.isArray(this.ordered_items)
+    )
+      this.hydrated = true;
+    return this.hydrated;
+  }
+
   async getOrderedItems() {
     let items = await db.query("SELECT * FROM order_items WHERE order_id = ?", [
       this.id,
@@ -105,8 +117,14 @@ export default class Order {
     );
   }
 
-  static async getAllOrders() {
-    let orders = await db.query("SELECT * FROM orders");
+  static async getAllOrders(limit = 10, offset = 0) {
+    let orders = null;
+    if (limit === -1) orders = await db.query("SELECT * FROM orders");
+    else
+      orders = await db.query("SELECT * FROM orders LIMIT ? OFFSET ?", [
+        limit,
+        offset,
+      ]);
     return orders[0].map((order) => new Order(order));
   }
 
