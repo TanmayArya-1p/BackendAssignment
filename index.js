@@ -23,7 +23,7 @@ DELETE /items/:id -> delete a single item by id (admin privs)
 */
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.get("/", async (req, res) => {
   res.send(await db.User.getAllUsers());

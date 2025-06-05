@@ -35,7 +35,16 @@ export default class User {
 
   async hydrateData() {
     let oldpass = this.password;
-    let res = await User.getUserById(this.id);
+
+    let res = this.id
+      ? await User.getUserById(this.id)
+      : this.username
+        ? await User.getUserByUsername(username)
+        : -1;
+
+    if (res === -1)
+      throw new Error("Either username or id has to be provided.");
+
     if (!res) throw new Error("User not found");
     Object.assign(this, res);
     this.HashedPassword = this.password;
@@ -107,7 +116,7 @@ export default class User {
   }
 
   async verifyPassword(password) {
-    if (!this.isHydrated()) throw new Error("User data not hydrated");
+    if (!this.isHydrated()) await this.hydrateData();
 
     let compres = await bcrypt.compare(password, this.HashedPassword);
     if (compres) return true;

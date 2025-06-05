@@ -1,4 +1,5 @@
 import db from "./db/index.js";
+import * as jwt from "./utils/jwt.js";
 
 async function usersSubmoduleTest() {
   let u1 = new db.User({ username: "u1", password: "u1" });
@@ -10,7 +11,7 @@ async function usersSubmoduleTest() {
   u2.delete();
   console.log(await db.User.getAllUsers());
   u1.create();
-
+  console.log(await jwt.createAuthToken(u1));
   console.log(await u1.verifyPassword("u1"));
   console.log(await u1.verifyPassword("u2"));
   console.log(await db.User.getUserByUsername("u1"));

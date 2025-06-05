@@ -1,6 +1,6 @@
 import db from "./db.js";
 import * as tags from "./tags.js";
-import * as utils from "../utils.js";
+import * as utils from "../utils/diff.js";
 
 export default class Item {
   constructor(p) {
