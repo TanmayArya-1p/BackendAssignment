@@ -9,17 +9,18 @@ let router = express.Router();
 router.use(express.json());
 router.use(authMiddleware.authenticationMiddleware);
 
-//AUTHORIZATION FOR EACH ROUTE
-// only let those deserving to see info
-
-router.get("/", async (req, res) => {
-  if (!req.params.limit) req.params.limit = -1;
-  if (!req.params.offset) req.params.offset = 0;
-  let limit = Number(req.params.limit);
-  let offset = Number(req.params.offset);
-  let orders = await db.Order.getAllOrders(limit, offset);
-  res.send(orders);
-});
+router.get(
+  "/",
+  authMiddleware.authorizationMiddleware(authUtils.CHEF),
+  async (req, res) => {
+    if (!req.params.limit) req.params.limit = -1;
+    if (!req.params.offset) req.params.offset = 0;
+    let limit = Number(req.params.limit);
+    let offset = Number(req.params.offset);
+    let orders = await db.Order.getAllOrders(limit, offset);
+    res.send(orders);
+  },
+);
 
 router.post("/", async (req, res) => {
   let table_no = req.body.table_no;
@@ -41,6 +42,14 @@ router.post("/", async (req, res) => {
 router.get("/:orderid", async (req, res) => {
   try {
     let order = await db.Order.getOrderById(Number(req.params.orderid));
+    if (
+      res.locals.user.role === "customer" &&
+      order.issued_by !== res.locals.user.id
+    ) {
+      return res.status(401).send({ message: "Unauthorized" });
+    } else {
+      console.log("PASSECHECKSD", res.locals.user);
+    }
     res.send(order);
   } catch (err) {
     console.log(err);
@@ -48,41 +57,54 @@ router.get("/:orderid", async (req, res) => {
   }
 });
 
-router.delete("/:orderid", async (req, res) => {
-  try {
-    let order = await db.Order.getOrderById(Number(req.params.orderid));
-    await order.delete();
-    res.send(order);
-  } catch (err) {
-    console.log(err);
-    res.status(500).send({ message: "Internal Server Error" });
-  }
-});
+router.delete(
+  "/:orderid",
+  authMiddleware.authorizationMiddleware(authUtils.CHEF),
+  async (req, res) => {
+    try {
+      let order = await db.Order.getOrderById(Number(req.params.orderid));
+      await order.delete();
+      res.send(order);
+    } catch (err) {
+      console.log(err);
+      res.status(500).send({ message: "Internal Server Error" });
+    }
+  },
+);
 
-router.put("/:orderid", async (req, res) => {
-  try {
-    let order = await db.Order.getOrderById(Number(req.params.orderid));
+router.put(
+  "/:orderid",
+  authMiddleware.authorizationMiddleware(authUtils.CHEF),
+  async (req, res) => {
+    try {
+      let order = await db.Order.getOrderById(Number(req.params.orderid));
 
-    if (!req.body.status) req.body.status = -1;
-    if (!req.body.billable_amount) req.body.billable_amount = -1;
-    if (!req.body.table_no) req.body.table_no = -1;
+      if (!req.body.status) req.body.status = -1;
+      if (!req.body.billable_amount) req.body.billable_amount = -1;
+      if (!req.body.table_no) req.body.table_no = -1;
 
-    order = await db.Order.updateOrder(
-      order.id,
-      req.body.status,
-      req.body.billable_amount,
-      req.body.table_no,
-    );
-    res.send(order);
-  } catch (err) {
-    console.log(err);
-    res.status(500).send({ message: "Internal Server Error" });
-  }
-});
+      order = await db.Order.updateOrder(
+        order.id,
+        req.body.status,
+        req.body.billable_amount,
+        req.body.table_no,
+      );
+      res.send(order);
+    } catch (err) {
+      console.log(err);
+      res.status(500).send({ message: "Internal Server Error" });
+    }
+  },
+);
 
 router.get("/:orderid/items", async (req, res) => {
   try {
     let order = await db.Order.getOrderById(Number(req.params.orderid));
+    if (
+      res.locals.user.role === "customer" &&
+      res.locals.user.id !== order.issued_by
+    )
+      return res.status(400).send({ message: "Unauthorized" });
     let items = await order.getOrderedItems();
     res.send(items);
   } catch (err) {
@@ -94,7 +116,11 @@ router.get("/:orderid/items", async (req, res) => {
 router.post("/:orderid/items", async (req, res) => {
   try {
     let order = await db.Order.getOrderById(Number(req.params.orderid));
-
+    if (
+      res.locals.user.role === "customer" &&
+      res.locals.user.id !== order.issued_by
+    )
+      return res.status(400).send({ message: "Unauthorized" });
     let item_id = req.body.item_id;
     let quantity = req.body.quantity;
     let instructions = req.body.instructions;
@@ -114,6 +140,11 @@ router.post("/:orderid/items", async (req, res) => {
 router.get("/:orderid/bill", async (req, res) => {
   try {
     let order = await db.Order.getOrderById(Number(req.params.orderid));
+    if (
+      res.locals.user.role === "customer" &&
+      res.locals.user.id !== order.issued_by
+    )
+      return res.status(400).send({ message: "Unauthorized" });
     let resolveStat = req.query.resolve == "true" ? true : false;
     let billamt = await order.resolveBillableAmount(resolveStat);
     let orderitems = await order.getOrderedItems();
@@ -151,5 +182,6 @@ router.post("/:orderid/bill/pay", async (req, res) => {
     res.status(500).send({ message: "Internal Server Error" });
   }
 });
+// TODO: AUTHORISZATION FOR PAY BILL
 
 export default router;
