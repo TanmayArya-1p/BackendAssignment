@@ -3,6 +3,7 @@ import cookieParser from "cookie-parser";
 import authRouter from "./routers/auth.js";
 import itemsRouter from "./routers/items.js";
 import usersRouter from "./routers/users.js";
+import ordersRouter from "./routers/orders.js";
 import logger from "morgan";
 import path from "path";
 import { dirname } from "node:path";
@@ -23,6 +24,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/api/auth", authRouter);
 app.use("/api/items", itemsRouter);
 app.use("/api/users", usersRouter);
+app.use("/api/orders", ordersRouter);
 
 app.use(function (req, res, next) {
   res.status(404).send("404 Not Found");

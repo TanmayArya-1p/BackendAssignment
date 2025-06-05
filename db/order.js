@@ -37,6 +37,11 @@ export default class Order {
     let items = await db.query("SELECT * FROM order_items WHERE order_id = ?", [
       this.id,
     ]);
+    for (let i = 0; i < items[0].length; i++) {
+      let it = await Item.getItemById(items[0][i].item_id);
+      items[0][i].item = it;
+    }
+
     return items[0];
   }
 
@@ -86,34 +91,48 @@ export default class Order {
     return newOrder.billable_amount;
   }
 
-  static async updateOrder(id, status = -1, billable_amount = -1) {
-    if (status === -1 && billable_amount === -1) {
+  static async updateOrder(
+    id,
+    status = -1,
+    billable_amount = -1,
+    table_no = -1,
+  ) {
+    if (status === -1 && billable_amount === -1 && table_no === -1) {
       return Promise.resolve();
     }
-    if (status == -1) {
-      await db.query("UPDATE orders SET billable_amount = ? WHERE id = ?", [
-        billable_amount,
-        id,
-      ]);
-    } else if (billable_amount == -1) {
-      await db.query("UPDATE orders SET status = ? WHERE id = ?", [status, id]);
-    } else {
-      await db.query(
-        "UPDATE orders SET status = ?, billable_amount = ? WHERE id = ?",
-        [status, billable_amount, id],
-      );
-    }
-    let order = await Order.getOrderById(id);
-    return order;
+    let ord = new Order(id);
+    await ord.hydrate();
+    if (status === -1) status = ord.status;
+    if (billable_amount === -1) billable_amount = ord.billable_amount;
+    if (table_no === -1) table_no = ord.billable_amount;
+
+    await db.query(
+      "UPDATE orders SET status = ?, billable_amount = ? WHERE id = ?",
+      [status, billable_amount, id],
+    );
+
+    ord.status = status;
+    ord.billable_amount = billable_amount;
+    ord.table_no = table_no;
+
+    return ord;
   }
 
   async orderItem(item_id, quantity, instructions = null) {
-    let price = await Item.getItemById(item_id);
-    price = price.price * quantity;
+    await this.hydrate();
+    if (this.status == "billed") throw new Error("Order is already billed");
+    let it = await Item.getItemById(item_id);
+    let price = it.price * quantity;
     await db.query(
       "INSERT INTO order_items (order_id, item_id, quantity, price,instructions) VALUES (?, ?, ?, ?,?)",
       [this.id, item_id, quantity, price, instructions],
     );
+    return {
+      item: it,
+      quantity: quantity,
+      price: price,
+      instructions: instructions,
+    };
   }
 
   static async getAllOrders(limit = 10, offset = 0) {
