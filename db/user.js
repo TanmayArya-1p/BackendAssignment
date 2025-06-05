@@ -80,10 +80,9 @@ export default class User {
   }
 
   static async getAllUsers(limit = 10, offset = 0) {
-    let users = null;
-    if (limit === -1) users = await db.query("SELECT * FROM users");
+    if (limit === -1) var users = await db.query("SELECT * FROM users");
     else
-      users = await db.query("SELECT * FROM users LIMIT ? OFFSET ?", [
+      var users = await db.query("SELECT * FROM users LIMIT ? OFFSET ?", [
         limit,
         offset,
       ]);

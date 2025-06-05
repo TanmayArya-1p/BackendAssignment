@@ -1,12 +1,12 @@
 import express from "express";
-import * as jwt from "../utils/jwt";
+import * as jwt from "../utils/jwt.js";
 import db from "../db/index.js";
 import * as authUtils from "../utils/auth.js";
 
 export async function authenticationMiddleware(req, res, next) {
   let authToken = authUtils.extractAuthToken(req);
   if (!authToken) authUtils.UnauthorizedResponse(res);
-  let auth = jwt.verifyJWT(authToken);
+  let auth = await jwt.verifyJWT(authToken);
 
   if (auth.status === "invalid") authUtils.UnauthorizedResponse(res);
 
@@ -18,7 +18,7 @@ export async function authenticationMiddleware(req, res, next) {
   }
 
   if (auth !== "valid") {
-    let refreshToken = authUtils.extractRefreshToken(req);
+    let refreshToken = res.locals.refreshToken;
 
     if (!refreshToken) authUtils.UnauthorizedResponse(res);
     let stat = jwt.verifyRefreshToken(token, user);
@@ -26,6 +26,7 @@ export async function authenticationMiddleware(req, res, next) {
 
     let newRefreshToken = jwt.createRefreshToken(user);
     let newAuthToken = jwt.createAuthToken(user);
+
     res.cookie("refreshToken", newRefreshToken, { httpOnly: true });
     res.cookie("authToken", newAuthToken, { httpOnly: true });
   }
@@ -33,4 +34,7 @@ export async function authenticationMiddleware(req, res, next) {
   next();
 }
 
-export async function authorizationMiddleware(req, res, next) {}
+export async function authorizationMiddleware(req, res, next) {
+  let user = res.locals.user;
+  next();
+}

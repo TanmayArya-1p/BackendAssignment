@@ -6,7 +6,7 @@
   "scripts": {
     "reset-schema": "sudo mysql < schema.sql",
     "test": "node --env-file=.env tests.js",
-    "start": "node --env-file=.env index.js"
+    "start": "nodemon --env-file=.env index.js"
   },
   "author": "",
   "license": "ISC",

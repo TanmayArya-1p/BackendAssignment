@@ -3,7 +3,7 @@ export function UnauthorizedResponse(res) {
   return;
 }
 
-function extractAuthToken(req) {
+export function extractAuthToken(req) {
   if (req.headers.authorization) {
     var authToken = req.headers.authorization.slice("Bearer ".length);
   } else if (req.cookies.authToken) {
@@ -14,7 +14,7 @@ function extractAuthToken(req) {
   return authToken;
 }
 
-function extractRefreshToken(req) {
+export function extractRefreshToken(req) {
   if (req.headers.refreshToken) {
     var refreshToken = req.headers.refreshToken;
   } else if (req.cookies.refreshToken) {

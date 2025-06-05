@@ -98,8 +98,8 @@ export default class Item {
   }
 
   static async getAllItems(limit = 10, offset = 0) {
-    let items = null;
-    if (limit === -1)
+    let items;
+    if (limit !== -1)
       items = await db.query("SELECT * FROM items LIMIT ? OFFSET ?", [
         limit,
         offset,

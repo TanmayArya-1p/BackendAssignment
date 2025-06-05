@@ -1,6 +1,8 @@
 import express from "express";
 import db from "../db/index.js";
 import * as jwt from "../utils/jwt.js";
+import * as authUtils from "../utils/auth.js";
+import * as authMiddleware from "../middleware/auth.js";
 
 let router = express.Router();
 
@@ -62,15 +64,11 @@ router.post("/login", async (req, res) => {
   }
 });
 
-//TODO: VERIFY USER USING MIDDLEWARE FIRST FOR logout
-// TODO: CHANGE LET =NULL TO VAR EVEYRWHERE
-router.post("/logout", (req, res) => {
-  if (req.headers.authorization) {
-    var authToken = req.headers.authorization.slice("Bearer ".length);
-  } else if (req.cookies.authToken) {
-    var authToken = req.cookies.authToken;
-  } else {
-    res.status(401).send({ message: "Unauthorized" });
-    return;
-  }
+router.post("/logout", authMiddleware.authenticationMiddleware, (req, res) => {
+  let refreshToken = authUtils.extractRefreshToken(req);
+  if (!refreshToken) authUtils.UnauthorizedResponse(res);
+
+  jwt.verifyRefreshToken(refreshToken, res.locals.user, true);
 });
+
+export default router;

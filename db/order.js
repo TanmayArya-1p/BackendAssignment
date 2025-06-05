@@ -90,7 +90,6 @@ export default class Order {
     if (status === -1 && billable_amount === -1) {
       return Promise.resolve();
     }
-    let order = null;
     if (status == -1) {
       await db.query("UPDATE orders SET billable_amount = ? WHERE id = ?", [
         billable_amount,
@@ -104,7 +103,7 @@ export default class Order {
         [status, billable_amount, id],
       );
     }
-    order = await Order.getOrderById(id);
+    let order = await Order.getOrderById(id);
     return order;
   }
 
@@ -118,7 +117,7 @@ export default class Order {
   }
 
   static async getAllOrders(limit = 10, offset = 0) {
-    let orders = null;
+    let orders;
     if (limit === -1) orders = await db.query("SELECT * FROM orders");
     else
       orders = await db.query("SELECT * FROM orders LIMIT ? OFFSET ?", [

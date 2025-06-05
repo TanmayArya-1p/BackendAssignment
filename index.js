@@ -1,6 +1,7 @@
 import express from "express";
 import db from "./db/index.js";
 import cookieParser from "cookie-parser";
+import authRouter from "./routers/auth.js";
 /*
 PATHS TO MAKE:
 
@@ -27,9 +28,7 @@ const port = process.env.PORT || 3000;
 
 app.use(cookieParser());
 
-app.get("/", async (req, res) => {
-  res.send(await db.User.getAllUsers());
-});
+app.use("/api/auth", authRouter);
 
 app.listen(port, () => {
   console.log(`App listening on port ${port}`);

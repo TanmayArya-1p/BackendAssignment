@@ -1,14 +1,13 @@
 import jwt from "jsonwebtoken";
 import db from "../db/index.js";
 
-//TODO: CHANGE BACK - TO +
 export async function createAuthToken(user) {
   if (!user.isHydrated()) await user.hydrate();
   let tok = {
     userID: user.id,
     username: user.username,
     role: user.role,
-    exp: Math.floor(Date.now() / 1000) - process.env.AUTH_TOKEN_EXPIRE,
+    exp: Math.floor(Date.now() / 1000 + process.env.AUTH_TOKEN_EXPIRE),
   };
   let signedtok = jwt.sign(tok, process.env.JWT_SECRET_KEY);
   return signedtok;
@@ -36,7 +35,7 @@ export async function createRefreshToken(user) {
 
 export async function verifyRefreshToken(token, user) {
   let stat = await verifyJWT(token);
-  if (!stat) return false;
-  let jtistat = await db.Jti.checkJti(stat.jti, user, true);
+  if (stat.status != "valid") return false;
+  let jtistat = await db.Jti.checkJti(stat.data.jti, user, true);
   return jtistat;
 }
