@@ -28,35 +28,6 @@ router.post("/register", async (req, res) => {
   }
 });
 
-router.post(
-  "/register/elevated",
-  authMiddleware.authenticationMiddleware,
-  authMiddleware.authorizationMiddleware(authUtils.ADMIN),
-  async (req, res) => {
-    let username = req.body.username;
-    let password = req.body.password;
-    let role = req.body.role;
-    if (!username || !password || !role) {
-      response
-        .status(400)
-        .send(new Error("Username, password and role are required"));
-      return;
-    }
-
-    let user = new db.User({
-      username: username,
-      password: password,
-      role: role,
-    });
-    try {
-      await user.create();
-      res.status(200).send({ message: "User created successfully" });
-    } catch (error) {
-      res.status(500).send({ message: "Internal server error : " + error });
-    }
-  },
-);
-
 router.post("/login", async (req, res) => {
   var username = req.body.username;
   var password = req.body.password;

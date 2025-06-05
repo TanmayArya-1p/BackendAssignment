@@ -7,16 +7,19 @@ async function usersSubmoduleTest() {
   await u1.create();
   await u2.create();
   console.log(await db.User.getAllUsers());
-  u1.delete();
-  u2.delete();
+  await u1.delete();
+  await u2.delete();
   console.log(await db.User.getAllUsers());
-  u1.create();
+  await u1.create();
+  console.log(await db.User.getAllUsers());
+
   console.log(await jwt.createAuthToken(u1));
   console.log(await u1.verifyPassword("u1"));
   console.log(await u1.verifyPassword("u2"));
   console.log(await db.User.getUserByUsername("u1"));
 
-  console.log(await u1.updateUser("u11", "u11"));
+  console.log(await u1.updateUser({ username: "u11", password: "u11" }));
+  console.log(await u1.updateUser({ username: "u11", role: "admin" }));
 
   console.log(await db.User.getAllUsers());
   await u1.delete();

@@ -42,8 +42,8 @@ export default class Item {
     if (this.tags && this.tags.length > 0) {
       for (const tag of this.tags) {
         if (!(await tags.giveItemTagByName(this.id, tag))) {
-          await this.delete();
-          throw new Error("Invalid tags");
+          let newtag_id = await tags.createTag(tag);
+          await tags.giveItemTag(this.id, newtag_id);
         }
       }
     }
@@ -114,8 +114,7 @@ export default class Item {
   }
 
   static #deriveItem(obj) {
-    let res = new Item(obj.id);
-    Object.assign(res, obj);
+    let res = new Item(obj);
     if (res.id && res.name && res.description && res.price) {
       res.hydrated = true;
     }

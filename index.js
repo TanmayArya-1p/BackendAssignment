@@ -2,6 +2,8 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import authRouter from "./routers/auth.js";
 import itemsRouter from "./routers/items.js";
+import usersRouter from "./routers/users.js";
+
 /*
 PATHS TO MAKE:
 
@@ -30,6 +32,7 @@ app.use(cookieParser());
 
 app.use("/api/auth", authRouter);
 app.use("/api/items", itemsRouter);
+app.use("/api/users", usersRouter);
 
 app.listen(port, () => {
   console.log(`App listening on port ${port}`);

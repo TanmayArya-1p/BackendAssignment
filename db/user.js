@@ -43,10 +43,8 @@ export default class User {
         : -1;
     if (res === -1)
       throw new Error("Either username or id has to be provided.");
-
     if (!res) throw new Error("User not found");
     Object.assign(this, res);
-    this.HashedPassword = this.password;
     this.password = oldpass;
     this.hydrated = true;
     return this;
@@ -95,16 +93,30 @@ export default class User {
     return User.#deriveUser(user[0][0]);
   }
 
-  async updateUser(username, PlainTextPassword, role = "customer") {
-    let hashedPwd = await bcrypt.hash(PlainTextPassword, 10);
-    await db.query(
-      "UPDATE users SET username = ?, password = ?, role = ? WHERE id = ?",
-      [username, hashedPwd, role, this.id],
-    );
+  async updateUser({
+    username = this.username,
+    PlainTextPassword,
+    role = this.role,
+  }) {
+    if (PlainTextPassword) {
+      let hashedPwd = await bcrypt.hash(PlainTextPassword, 10);
+      await db.query(
+        "UPDATE users SET username = ?, password = ?, role = ? WHERE id = ?",
+        [username, hashedPwd, role, this.id],
+      );
+      this.HashedPassword = hashedPwd;
+      this.password = PlainTextPassword;
+    } else {
+      await db.query("UPDATE users SET username = ?, role = ? WHERE id = ?", [
+        username,
+        role,
+        this.id,
+      ]);
+    }
     this.username = username;
-    this.password = PlainTextPassword;
-    this.HashedPassword = hashedPwd;
     this.role = role;
+    await this.hydrateData();
+
     return this;
   }
 
@@ -122,10 +134,9 @@ export default class User {
 
   static #deriveUser(obj) {
     if (!obj) throw new Error("User not found");
-    let us = new User(obj.id);
-    us.HashedPassword = us.password;
-    us.password = "";
-    Object.assign(us, obj);
+    obj.HashedPassword = obj.password;
+    obj.password = "";
+    let us = new User(obj);
     return us;
   }
 }
