@@ -111,7 +111,7 @@ async function jtiSubmoduleTest() {
   console.log(await db.Jti.checkJti(uuid, u1, true));
   console.log(await db.Jti.checkJti(uuid, u1));
   uuid = await db.Jti.issueJti(u1);
-  console.log(uuid);
+  console.log("ISSUED NEW JTI", uuid);
   db.Jti.cleanupJti();
 }
 

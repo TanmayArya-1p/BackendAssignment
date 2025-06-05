@@ -14,16 +14,14 @@ export async function authenticationMiddleware(req, res, next) {
   } catch (err) {
     return authUtils.UnauthorizedResponse(res);
   }
-
   if (auth.status !== "valid") {
-    let refreshToken = res.locals.refreshToken;
-
+    let refreshToken = authUtils.extractRefreshToken(req);
     if (!refreshToken) return authUtils.UnauthorizedResponse(res);
     let stat = jwt.verifyRefreshToken(refreshToken, user);
     if (!stat) return authUtils.UnauthorizedResponse(res);
 
-    let newRefreshToken = jwt.createRefreshToken(user);
-    let newAuthToken = jwt.createAuthToken(user);
+    let newRefreshToken = await jwt.createRefreshToken(user);
+    let newAuthToken = await jwt.createAuthToken(user);
 
     res.cookie("refreshToken", newRefreshToken, { httpOnly: true });
     res.cookie("authToken", newAuthToken, { httpOnly: true });

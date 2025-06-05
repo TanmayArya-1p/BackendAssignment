@@ -14,10 +14,12 @@ export async function createAuthToken(user) {
 }
 
 export async function verifyJWT(token) {
+  var decoded;
   try {
-    var decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
     return { status: "valid", data: decoded };
   } catch (error) {
+    decoded = jwt.decode(token, process.env.JWT_SECRET_KEY);
     if ((error.message = "jwt expired"))
       return { status: "expired", data: decoded };
     return { status: "invalid", data: decoded };
