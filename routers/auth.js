@@ -29,8 +29,8 @@ router.post("/register", async (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
-  let username = req.body.username;
-  let password = req.body.password;
+  var username = req.body.username;
+  var password = req.body.password;
   if (!username || !password) {
     response.status(400).send(new Error("Username and password are required"));
     return;
@@ -46,12 +46,12 @@ router.post("/login", async (req, res) => {
       let authToken = await jwt.createAuthToken(user);
       let refreshToken = await jwt.createRefreshToken(user);
       res.cookie("authToken", authToken, {
-        maxAge: process.env.AUTH_TOKEN_EXPIRES * 1000,
+        maxAge: 2 * 60 * 60 * 1000,
         httpOnly: true,
         sameSite: "strict",
       });
       res.cookie("refreshToken", refreshToken, {
-        maxAge: process.env.REFRESH_TOKEN_EXPIRES * 1000,
+        maxAge: 2 * 60 * 60 * 1000,
         httpOnly: true,
         sameSite: "strict",
       });
@@ -64,11 +64,16 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.post("/logout", authMiddleware.authenticationMiddleware, (req, res) => {
-  let refreshToken = authUtils.extractRefreshToken(req);
-  if (!refreshToken) authUtils.UnauthorizedResponse(res);
-
-  jwt.verifyRefreshToken(refreshToken, res.locals.user, true);
-});
+router.post(
+  "/logout",
+  authMiddleware.authenticationMiddleware,
+  async (req, res) => {
+    let refreshToken = authUtils.extractRefreshToken(req);
+    if (!refreshToken) return authUtils.UnauthorizedResponse(res);
+    await jwt.verifyRefreshToken(refreshToken, res.locals.user, true);
+    await db.Jti.cleanupJti();
+    res.send({ message: "Logged Out Successfully" });
+  },
+);
 
 export default router;

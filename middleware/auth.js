@@ -5,24 +5,22 @@ import * as authUtils from "../utils/auth.js";
 
 export async function authenticationMiddleware(req, res, next) {
   let authToken = authUtils.extractAuthToken(req);
-  if (!authToken) authUtils.UnauthorizedResponse(res);
+  if (!authToken) return authUtils.UnauthorizedResponse(res);
   let auth = await jwt.verifyJWT(authToken);
-
-  if (auth.status === "invalid") authUtils.UnauthorizedResponse(res);
-
+  if (auth.status === "invalid") return authUtils.UnauthorizedResponse(res);
   try {
     var user = new db.User(auth.data.userID);
     await user.hydrateData();
   } catch (err) {
-    authUtils.UnauthorizedResponse(res);
+    return authUtils.UnauthorizedResponse(res);
   }
 
-  if (auth !== "valid") {
+  if (auth.status !== "valid") {
     let refreshToken = res.locals.refreshToken;
 
-    if (!refreshToken) authUtils.UnauthorizedResponse(res);
-    let stat = jwt.verifyRefreshToken(token, user);
-    if (!stat) authUtils.UnauthorizedResponse(res);
+    if (!refreshToken) return authUtils.UnauthorizedResponse(res);
+    let stat = jwt.verifyRefreshToken(refreshToken, user);
+    if (!stat) return authUtils.UnauthorizedResponse(res);
 
     let newRefreshToken = jwt.createRefreshToken(user);
     let newAuthToken = jwt.createAuthToken(user);

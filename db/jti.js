@@ -15,7 +15,9 @@ export async function checkJti(jti, user, del = false) {
 }
 
 export async function issueJti(user) {
-  let expire = Date.now() / 1000 + process.env.REFRESH_TOKEN_EXPIRE;
+  let expire = Math.floor(
+    Date.now() / 1000 + Number(process.env.REFRESH_TOKEN_EXPIRE),
+  );
   let [uuid] = await db.query("SELECT UUID() as uuid;");
   uuid = uuid[0].uuid;
   const [rows] = await db.query(

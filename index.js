@@ -1,5 +1,4 @@
 import express from "express";
-import db from "./db/index.js";
 import cookieParser from "cookie-parser";
 import authRouter from "./routers/auth.js";
 /*

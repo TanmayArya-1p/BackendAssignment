@@ -39,9 +39,8 @@ export default class User {
     let res = this.id
       ? await User.getUserById(this.id)
       : this.username
-        ? await User.getUserByUsername(username)
+        ? await User.getUserByUsername(this.username)
         : -1;
-
     if (res === -1)
       throw new Error("Either username or id has to be provided.");
 
@@ -116,13 +115,13 @@ export default class User {
 
   async verifyPassword(password) {
     if (!this.isHydrated()) await this.hydrateData();
-
     let compres = await bcrypt.compare(password, this.HashedPassword);
     if (compres) return true;
     return false;
   }
 
   static #deriveUser(obj) {
+    if (!obj) throw new Error("User not found");
     let us = new User(obj.id);
     us.HashedPassword = us.password;
     us.password = "";
