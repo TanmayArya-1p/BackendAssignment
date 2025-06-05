@@ -6,7 +6,8 @@
   "scripts": {
     "reset-schema": "sudo mysql < schema.sql",
     "test": "node --env-file=.env tests.js",
-    "start": "nodemon --env-file=.env index.js"
+    "start": "nodemon --env-file=.env ./bin/www",
+    "debug": "DEBUG=mvcassignment:* npm start"
   },
   "author": "",
   "license": "ISC",
@@ -17,6 +18,9 @@
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
-    "mysql2": "^3.14.1"
+    "mysql2": "^3.14.1",
+    "debug": "~2.6.9",
+    "http-errors": "~1.6.3",
+    "morgan": "~1.9.1"
   }
 }
