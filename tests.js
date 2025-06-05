@@ -115,6 +115,12 @@ async function jtiSubmoduleTest() {
   db.Jti.cleanupJti();
 }
 
+async function initAdmin() {
+  let u = new db.User({ username: "admin", password: "admin", role: "admin" });
+  await u.create();
+  console.log(u);
+}
+
 switch (process.argv[2]) {
   case "users":
     await usersSubmoduleTest();
@@ -127,6 +133,9 @@ switch (process.argv[2]) {
     break;
   case "jti":
     await jtiSubmoduleTest();
+    break;
+  case "init":
+    await initAdmin();
     break;
 }
 

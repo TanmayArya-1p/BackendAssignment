@@ -30,7 +30,10 @@ export async function authenticationMiddleware(req, res, next) {
   next();
 }
 
-export async function authorizationMiddleware(req, res, next) {
-  let user = res.locals.user;
-  next();
+export function authorizationMiddleware(allowedRole = authUtils.CUSTOMER) {
+  return (req, res, next) => {
+    let user = res.locals.user;
+    if (authUtils.roleMap[user.role] >= allowedRole) next();
+    else return authUtils.UnauthorizedResponse(res);
+  };
 }

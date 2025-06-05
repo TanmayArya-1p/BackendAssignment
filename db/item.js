@@ -41,7 +41,10 @@ export default class Item {
     let item = await Item.getItemById(newID);
     if (this.tags && this.tags.length > 0) {
       for (const tag of this.tags) {
-        await tags.giveItemTagByName(this.id, tag);
+        if (!(await tags.giveItemTagByName(this.id, tag))) {
+          await this.delete();
+          throw new Error("Invalid tags");
+        }
       }
     }
 
@@ -98,13 +101,13 @@ export default class Item {
   }
 
   static async getAllItems(limit = 10, offset = 0) {
-    let items;
-    if (limit !== -1)
+    var items;
+    if (limit !== -1) {
       items = await db.query("SELECT * FROM items LIMIT ? OFFSET ?", [
         limit,
         offset,
       ]);
-    else items = await db.query("SELECT * FROM items");
+    } else items = await db.query("SELECT * FROM items");
     for (let i = 0; i < items[0].length; i++)
       items[0][i].tags = await tags.getItemTags(items[0][i].id);
     return items[0].map((a) => Item.#deriveItem(a));

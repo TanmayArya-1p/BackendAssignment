@@ -24,3 +24,8 @@ export function extractRefreshToken(req) {
   }
   return refreshToken;
 }
+
+export const CUSTOMER = 1;
+export const CHEF = 2;
+export const ADMIN = 3;
+export const roleMap = { customer: CUSTOMER, admin: ADMIN, chef: CHEF };
