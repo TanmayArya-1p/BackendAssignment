@@ -1,6 +1,6 @@
 import express from "express";
 import db from "./db/index.js";
-
+import cookieParser from "cookie-parser";
 /*
 PATHS TO MAKE:
 
@@ -24,6 +24,8 @@ DELETE /items/:id -> delete a single item by id (admin privs)
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+app.use(cookieParser());
 
 app.get("/", async (req, res) => {
   res.send(await db.User.getAllUsers());
