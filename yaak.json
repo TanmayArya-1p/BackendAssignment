@@ -1,0 +1,643 @@
+{
+  "yaakVersion": "2025.1.2",
+  "yaakSchema": 3,
+  "timestamp": "2025-06-05T19:33:56.813929090",
+  "resources": {
+    "workspaces": [
+      {
+        "model": "workspace",
+        "id": "wk_Eke4CVwYx3",
+        "createdAt": "2025-06-05T08:16:43.439791475",
+        "updatedAt": "2025-06-05T08:16:43.439792227",
+        "name": "MVCAssignment",
+        "description": "",
+        "settingValidateCertificates": true,
+        "settingFollowRedirects": true,
+        "settingRequestTimeout": 0
+      }
+    ],
+    "environments": [
+      {
+        "model": "environment",
+        "id": "ev_3oRT82a8uR",
+        "workspaceId": "wk_Eke4CVwYx3",
+        "environmentId": null,
+        "createdAt": "2025-06-05T08:16:43.855664912",
+        "updatedAt": "2025-06-05T09:05:12.374970233",
+        "name": "Global Variables",
+        "variables": [
+          {
+            "enabled": true,
+            "name": "rootUrl",
+            "value": "localhost:3000",
+            "id": "VdRt6NdxY2"
+          },
+          {
+            "enabled": true,
+            "name": "authToken",
+            "value": "",
+            "id": "jntI5ZI5ug"
+          },
+          {
+            "enabled": true,
+            "name": "refreshToken",
+            "value": "",
+            "id": "yjdCkXsjHd"
+          },
+          {
+            "enabled": true,
+            "name": "",
+            "value": "",
+            "id": "vfiQmj25sE"
+          }
+        ]
+      }
+    ],
+    "folders": [
+      {
+        "model": "folder",
+        "id": "fl_FHqEBYGs8s",
+        "createdAt": "2025-06-05T17:59:28.720433557",
+        "updatedAt": "2025-06-05T17:59:28.720434228",
+        "workspaceId": "wk_Eke4CVwYx3",
+        "folderId": null,
+        "name": "Orders",
+        "description": "",
+        "sortPriority": -1749146400000.0
+      },
+      {
+        "model": "folder",
+        "id": "fl_cY6F3X5YJ9",
+        "createdAt": "2025-06-05T12:44:26.357549675",
+        "updatedAt": "2025-06-05T12:44:26.357550276",
+        "workspaceId": "wk_Eke4CVwYx3",
+        "folderId": null,
+        "name": "Users",
+        "description": "",
+        "sortPriority": -1749127500000.0
+      },
+      {
+        "model": "folder",
+        "id": "fl_psLhy7gMQ9",
+        "createdAt": "2025-06-05T11:42:23.549579870",
+        "updatedAt": "2025-06-05T11:42:23.549580552",
+        "workspaceId": "wk_Eke4CVwYx3",
+        "folderId": null,
+        "name": "Items",
+        "description": "",
+        "sortPriority": -1749123700000.0
+      },
+      {
+        "model": "folder",
+        "id": "fl_rShWiL4mD5",
+        "createdAt": "2025-06-05T08:17:05.431750551",
+        "updatedAt": "2025-06-05T08:17:05.431751573",
+        "workspaceId": "wk_Eke4CVwYx3",
+        "folderId": null,
+        "name": "Auth",
+        "description": "",
+        "sortPriority": -1749111400000.0
+      }
+    ],
+    "httpRequests": [
+      {
+        "model": "http_request",
+        "id": "rq_RwHkK2X3tT",
+        "createdAt": "2025-06-05T19:29:04.278038637",
+        "updatedAt": "2025-06-05T19:30:06.575473874",
+        "workspaceId": "wk_Eke4CVwYx3",
+        "folderId": "fl_FHqEBYGs8s",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {
+          "text": "{\n  \"amount\":10\n}"
+        },
+        "bodyType": "application/json",
+        "description": "",
+        "headers": [
+          {
+            "enabled": true,
+            "name": "Content-Type",
+            "value": "application/json",
+            "id": "cSEmbjgxsd"
+          }
+        ],
+        "method": "POST",
+        "name": "Pay Bill",
+        "sortPriority": -1749111400000.0,
+        "url": "${[ rootUrl ]}/api/orders/6/bill/pay",
+        "urlParameters": [
+          {
+            "enabled": true,
+            "name": "",
+            "value": "",
+            "id": "gbRCnJwXhn"
+          }
+        ]
+      },
+      {
+        "model": "http_request",
+        "id": "rq_mUc3Kd98BY",
+        "createdAt": "2025-06-05T19:25:44.834982342",
+        "updatedAt": "2025-06-05T19:28:15.134049343",
+        "workspaceId": "wk_Eke4CVwYx3",
+        "folderId": "fl_FHqEBYGs8s",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {},
+        "bodyType": null,
+        "description": "",
+        "headers": [],
+        "method": "GET",
+        "name": "Generate Bill",
+        "sortPriority": -1749111400000.0,
+        "url": "${[ rootUrl ]}/api/orders/6/bill?resolve=true",
+        "urlParameters": []
+      },
+      {
+        "model": "http_request",
+        "id": "rq_4YMY8kfBBW",
+        "createdAt": "2025-06-05T18:58:51.288753835",
+        "updatedAt": "2025-06-05T19:27:18.818457440",
+        "workspaceId": "wk_Eke4CVwYx3",
+        "folderId": "fl_FHqEBYGs8s",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {
+          "text": "{\n  \"item_id\" : 1,\n  \"quantity\" : 2,\n  \"instructions\": \"Hot and spicy\"\n}"
+        },
+        "bodyType": "application/json",
+        "description": "",
+        "headers": [
+          {
+            "enabled": true,
+            "name": "Content-Type",
+            "value": "application/json",
+            "id": "bQT2N3XYq5"
+          }
+        ],
+        "method": "POST",
+        "name": "Order Item",
+        "sortPriority": -1749111400000.0,
+        "url": "${[ rootUrl ]}/api/orders/6/items",
+        "urlParameters": []
+      },
+      {
+        "model": "http_request",
+        "id": "rq_yiMqg964cw",
+        "createdAt": "2025-06-05T18:57:34.408702281",
+        "updatedAt": "2025-06-05T19:27:13.789752775",
+        "workspaceId": "wk_Eke4CVwYx3",
+        "folderId": "fl_FHqEBYGs8s",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {},
+        "bodyType": null,
+        "description": "",
+        "headers": [],
+        "method": "GET",
+        "name": "Get All Ordered Items",
+        "sortPriority": -1749111400000.0,
+        "url": "${[ rootUrl ]}/api/orders/6/items",
+        "urlParameters": []
+      },
+      {
+        "model": "http_request",
+        "id": "rq_CXxqBJmdMg",
+        "createdAt": "2025-06-05T18:25:59.315595468",
+        "updatedAt": "2025-06-05T18:40:59.301086939",
+        "workspaceId": "wk_Eke4CVwYx3",
+        "folderId": "fl_FHqEBYGs8s",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {
+          "text": "{\n  \"status\" : \"billed\",\n  \"billable_amount\" : 200,\n  \"table_no\" : 10\n}"
+        },
+        "bodyType": "application/json",
+        "description": "",
+        "headers": [
+          {
+            "enabled": true,
+            "name": "Content-Type",
+            "value": "application/json",
+            "id": "TGbkqXc4DD"
+          }
+        ],
+        "method": "PUT",
+        "name": "Update Order",
+        "sortPriority": -1749111400000.0,
+        "url": "${[ rootUrl ]}/api/orders/5",
+        "urlParameters": []
+      },
+      {
+        "model": "http_request",
+        "id": "rq_nTp6HZdxyC",
+        "createdAt": "2025-06-05T18:19:02.239503790",
+        "updatedAt": "2025-06-05T19:26:56.856888559",
+        "workspaceId": "wk_Eke4CVwYx3",
+        "folderId": "fl_FHqEBYGs8s",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {},
+        "bodyType": null,
+        "description": "",
+        "headers": [],
+        "method": "DELETE",
+        "name": "Delete Order",
+        "sortPriority": -1749111400000.0,
+        "url": "${[ rootUrl ]}/api/orders/5",
+        "urlParameters": []
+      },
+      {
+        "model": "http_request",
+        "id": "rq_d8gtqnnrpi",
+        "createdAt": "2025-06-05T18:17:57.894320986",
+        "updatedAt": "2025-06-05T18:18:20.430865590",
+        "workspaceId": "wk_Eke4CVwYx3",
+        "folderId": "fl_FHqEBYGs8s",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {
+          "text": "{\n  \"table_no\" : 2\n}"
+        },
+        "bodyType": "application/json",
+        "description": "",
+        "headers": [
+          {
+            "enabled": true,
+            "name": "Content-Type",
+            "value": "application/json",
+            "id": "CPG7JCBfG3"
+          }
+        ],
+        "method": "POST",
+        "name": "Create Order",
+        "sortPriority": -1749111400000.0,
+        "url": "${[ rootUrl ]}/api/orders",
+        "urlParameters": []
+      },
+      {
+        "model": "http_request",
+        "id": "rq_bM5aoegzsK",
+        "createdAt": "2025-06-05T18:02:59.561427524",
+        "updatedAt": "2025-06-05T18:26:50.526324006",
+        "workspaceId": "wk_Eke4CVwYx3",
+        "folderId": "fl_FHqEBYGs8s",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {},
+        "bodyType": null,
+        "description": "",
+        "headers": [],
+        "method": "GET",
+        "name": "Get Order",
+        "sortPriority": -1749111400000.0,
+        "url": "${[ rootUrl ]}/api/orders/5",
+        "urlParameters": []
+      },
+      {
+        "model": "http_request",
+        "id": "rq_AU3ThtHocR",
+        "createdAt": "2025-06-05T17:59:32.028527469",
+        "updatedAt": "2025-06-05T17:59:47.926006883",
+        "workspaceId": "wk_Eke4CVwYx3",
+        "folderId": "fl_FHqEBYGs8s",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {},
+        "bodyType": null,
+        "description": "",
+        "headers": [],
+        "method": "GET",
+        "name": "Get All Orders",
+        "sortPriority": -1749111400000.0,
+        "url": "${[ rootUrl ]}/api/orders",
+        "urlParameters": []
+      },
+      {
+        "model": "http_request",
+        "id": "rq_yyqHWaryD3",
+        "createdAt": "2025-06-05T14:32:30.678513922",
+        "updatedAt": "2025-06-05T15:07:35.478500750",
+        "workspaceId": "wk_Eke4CVwYx3",
+        "folderId": "fl_cY6F3X5YJ9",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {
+          "text": "{\n  \"username\" : \"newnenwnewnewnenw\",\n  \"password\" : \"hahahahaha\",\n  \"role\": \"chef\"\n}"
+        },
+        "bodyType": "application/json",
+        "description": "",
+        "headers": [
+          {
+            "enabled": true,
+            "name": "Content-Type",
+            "value": "application/json",
+            "id": "bNAJwf6PWa"
+          }
+        ],
+        "method": "PUT",
+        "name": "Update User",
+        "sortPriority": -1749111400000.0,
+        "url": "${[ rootUrl ]}/api/users/3",
+        "urlParameters": []
+      },
+      {
+        "model": "http_request",
+        "id": "rq_o88CbGwKKS",
+        "createdAt": "2025-06-05T14:32:03.704497849",
+        "updatedAt": "2025-06-05T14:32:16.626217405",
+        "workspaceId": "wk_Eke4CVwYx3",
+        "folderId": "fl_cY6F3X5YJ9",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {},
+        "bodyType": null,
+        "description": "",
+        "headers": [],
+        "method": "DELETE",
+        "name": "Delete User",
+        "sortPriority": -1749111400000.0,
+        "url": "${[ rootUrl ]}/api/users/2",
+        "urlParameters": []
+      },
+      {
+        "model": "http_request",
+        "id": "rq_QAAe3VNUig",
+        "createdAt": "2025-06-05T14:27:38.534055276",
+        "updatedAt": "2025-06-05T14:28:31.900405849",
+        "workspaceId": "wk_Eke4CVwYx3",
+        "folderId": "fl_cY6F3X5YJ9",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {
+          "text": "{\n  \"username\" : \"loller\",\n  \"password\" : \"kaka\",\n  \"role\": \"customer\"\n}"
+        },
+        "bodyType": "application/json",
+        "description": "",
+        "headers": [
+          {
+            "enabled": true,
+            "name": "Content-Type",
+            "value": "application/json",
+            "id": "QCDNwTcBVK"
+          }
+        ],
+        "method": "POST",
+        "name": "Create User",
+        "sortPriority": -1749111400000.0,
+        "url": "${[ rootUrl ]}/api/users",
+        "urlParameters": []
+      },
+      {
+        "model": "http_request",
+        "id": "rq_i25LdMaTFy",
+        "createdAt": "2025-06-05T14:19:40.186329294",
+        "updatedAt": "2025-06-05T14:24:50.769636543",
+        "workspaceId": "wk_Eke4CVwYx3",
+        "folderId": "fl_cY6F3X5YJ9",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {},
+        "bodyType": null,
+        "description": "",
+        "headers": [],
+        "method": "GET",
+        "name": "Get User",
+        "sortPriority": -1749111400000.0,
+        "url": "${[ rootUrl ]}/api/users/1",
+        "urlParameters": []
+      },
+      {
+        "model": "http_request",
+        "id": "rq_ZVvLNEAvb2",
+        "createdAt": "2025-06-05T14:10:21.254125947",
+        "updatedAt": "2025-06-05T14:19:37.633954231",
+        "workspaceId": "wk_Eke4CVwYx3",
+        "folderId": "fl_cY6F3X5YJ9",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {},
+        "bodyType": null,
+        "description": "",
+        "headers": [],
+        "method": "GET",
+        "name": "Get All Users",
+        "sortPriority": -1749111400000.0,
+        "url": "${[ rootUrl ]}/api/users",
+        "urlParameters": []
+      },
+      {
+        "model": "http_request",
+        "id": "rq_nZKge5kYRW",
+        "createdAt": "2025-06-05T12:40:06.987741006",
+        "updatedAt": "2025-06-05T12:44:08.960670611",
+        "workspaceId": "wk_Eke4CVwYx3",
+        "folderId": "fl_psLhy7gMQ9",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {
+          "text": "{\n  \"name\" : \"newname1\",\n  \"description\" : \"newdesc\",\n  \"tags\" : [\"1\"]\n}"
+        },
+        "bodyType": "application/json",
+        "description": "",
+        "headers": [
+          {
+            "enabled": true,
+            "name": "Content-Type",
+            "value": "application/json",
+            "id": "ptSzjTuTED"
+          }
+        ],
+        "method": "PUT",
+        "name": "Update Items",
+        "sortPriority": -1749111400000.0,
+        "url": "${[ rootUrl ]}/api/items/1",
+        "urlParameters": []
+      },
+      {
+        "model": "http_request",
+        "id": "rq_7zNmozjaty",
+        "createdAt": "2025-06-05T12:33:33.655080592",
+        "updatedAt": "2025-06-05T12:43:53.479541293",
+        "workspaceId": "wk_Eke4CVwYx3",
+        "folderId": "fl_psLhy7gMQ9",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {},
+        "bodyType": null,
+        "description": "",
+        "headers": [],
+        "method": "DELETE",
+        "name": "Delete Item",
+        "sortPriority": -1749111400000.0,
+        "url": "${[ rootUrl ]}/api/items/2",
+        "urlParameters": []
+      },
+      {
+        "model": "http_request",
+        "id": "rq_b4tx2Fiy9D",
+        "createdAt": "2025-06-05T12:32:59.253876507",
+        "updatedAt": "2025-06-05T12:43:56.976418649",
+        "workspaceId": "wk_Eke4CVwYx3",
+        "folderId": "fl_psLhy7gMQ9",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {},
+        "bodyType": null,
+        "description": "",
+        "headers": [],
+        "method": "GET",
+        "name": "Get Item",
+        "sortPriority": -1749111400000.0,
+        "url": "${[ rootUrl ]}/api/items/1",
+        "urlParameters": []
+      },
+      {
+        "model": "http_request",
+        "id": "rq_4N3zhzJzjc",
+        "createdAt": "2025-06-05T12:11:20.685007281",
+        "updatedAt": "2025-06-05T12:44:50.098653145",
+        "workspaceId": "wk_Eke4CVwYx3",
+        "folderId": "fl_psLhy7gMQ9",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {
+          "text": "{\n  \"name\" : \"dddkkk\",\n  \"price\": 2,\n  \"description\" : \"item1 desc\"\n}"
+        },
+        "bodyType": "application/json",
+        "description": "",
+        "headers": [
+          {
+            "enabled": true,
+            "name": "Content-Type",
+            "value": "application/json",
+            "id": "tdWJ0phSBb"
+          }
+        ],
+        "method": "POST",
+        "name": "Create Item",
+        "sortPriority": -1749111400000.0,
+        "url": "${[ rootUrl ]}/api/items",
+        "urlParameters": []
+      },
+      {
+        "model": "http_request",
+        "id": "rq_CfApijwJxn",
+        "createdAt": "2025-06-05T11:42:26.798181210",
+        "updatedAt": "2025-06-05T12:44:05.225567740",
+        "workspaceId": "wk_Eke4CVwYx3",
+        "folderId": "fl_psLhy7gMQ9",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {},
+        "bodyType": null,
+        "description": "",
+        "headers": [],
+        "method": "GET",
+        "name": "Get All Items",
+        "sortPriority": -1749111400000.0,
+        "url": "${[ rootUrl ]}/api/items",
+        "urlParameters": []
+      },
+      {
+        "model": "http_request",
+        "id": "rq_KVxnNzziZj",
+        "createdAt": "2025-06-05T08:21:19.528072534",
+        "updatedAt": "2025-06-05T12:44:11.786368637",
+        "workspaceId": "wk_Eke4CVwYx3",
+        "folderId": "fl_rShWiL4mD5",
+        "authentication": {
+          "disabled": true
+        },
+        "authenticationType": "basic",
+        "body": {},
+        "bodyType": null,
+        "description": "",
+        "headers": [
+          {
+            "enabled": true,
+            "name": "Authorization",
+            "value": "Bearer ${[ authToken ]}",
+            "id": "arxkfCGuAX"
+          },
+          {
+            "enabled": true,
+            "name": "refreshToken",
+            "value": "${[ refreshToken ]}",
+            "id": "T3SB6tkakk"
+          },
+          {
+            "enabled": true,
+            "name": "",
+            "value": "",
+            "id": "Z2SwfUV3zt"
+          }
+        ],
+        "method": "POST",
+        "name": "Logout",
+        "sortPriority": -1749111400000.0,
+        "url": "${[ rootUrl ]}/api/auth/logout",
+        "urlParameters": []
+      },
+      {
+        "model": "http_request",
+        "id": "rq_LtaYaPnefP",
+        "createdAt": "2025-06-05T08:20:16.761888944",
+        "updatedAt": "2025-06-05T12:44:14.432727996",
+        "workspaceId": "wk_Eke4CVwYx3",
+        "folderId": "fl_rShWiL4mD5",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {
+          "text": "{\n  \"username\" : \"u1\",\n  \"password\" : \"daw\"\n}"
+        },
+        "bodyType": "application/json",
+        "description": "",
+        "headers": [
+          {
+            "enabled": true,
+            "name": "Content-Type",
+            "value": "application/json",
+            "id": "Ncu3WyW2P6"
+          }
+        ],
+        "method": "POST",
+        "name": "Register",
+        "sortPriority": -1749111400000.0,
+        "url": "${[ rootUrl ]}/api/auth/register",
+        "urlParameters": []
+      },
+      {
+        "model": "http_request",
+        "id": "rq_mYcieng9we",
+        "createdAt": "2025-06-05T08:17:49.523478571",
+        "updatedAt": "2025-06-05T12:44:16.779410725",
+        "workspaceId": "wk_Eke4CVwYx3",
+        "folderId": "fl_rShWiL4mD5",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {
+          "text": "{\n  \"username\" : \"admin\",\n  \"password\" : \"admin\"\n}"
+        },
+        "bodyType": "application/json",
+        "description": "",
+        "headers": [
+          {
+            "enabled": true,
+            "name": "Content-Type",
+            "value": "application/json",
+            "id": "5Uaf4RMgnG"
+          }
+        ],
+        "method": "POST",
+        "name": "Login",
+        "sortPriority": -1749111400000.0,
+        "url": "${[ rootUrl ]}/api/auth/login",
+        "urlParameters": []
+      }
+    ],
+    "grpcRequests": [],
+    "websocketRequests": []
+  }
+}
