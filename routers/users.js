@@ -7,7 +7,7 @@ import * as authMiddleware from "../middleware/auth.js";
 let router = express.Router();
 
 router.use(express.json());
-router.use(authMiddleware.authenticationMiddleware);
+router.use(authMiddleware.authenticationMiddleware());
 router.use(authMiddleware.authorizationMiddleware(authUtils.ADMIN));
 
 router.get("/", async (req, res) => {

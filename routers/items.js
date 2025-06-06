@@ -10,7 +10,7 @@ router.use(express.json());
 
 router.get(
   "/",
-  authMiddleware.authenticationMiddleware,
+  authMiddleware.authenticationMiddleware(),
   authMiddleware.authorizationMiddleware(authUtils.CUSTOMER),
   async (req, res) => {
     if (!req.params.limit) req.params.limit = -1;
@@ -24,7 +24,7 @@ router.get(
 
 router.get(
   "/:itemid",
-  authMiddleware.authenticationMiddleware,
+  authMiddleware.authenticationMiddleware(),
   authMiddleware.authorizationMiddleware(authUtils.CUSTOMER),
   async (req, res) => {
     try {
@@ -39,7 +39,7 @@ router.get(
 
 router.post(
   "/",
-  authMiddleware.authenticationMiddleware,
+  authMiddleware.authenticationMiddleware(),
   authMiddleware.authorizationMiddleware(authUtils.CHEF),
   async (req, res) => {
     if (!req.body.tags) req.body.tags = [];
@@ -60,7 +60,7 @@ router.post(
 
 router.delete(
   "/:itemid",
-  authMiddleware.authenticationMiddleware,
+  authMiddleware.authenticationMiddleware(),
   authMiddleware.authorizationMiddleware(authUtils.CHEF),
   async (req, res) => {
     try {
@@ -75,7 +75,7 @@ router.delete(
 
 router.put(
   "/:itemid",
-  authMiddleware.authenticationMiddleware,
+  authMiddleware.authenticationMiddleware(),
   authMiddleware.authorizationMiddleware(authUtils.CHEF),
   async (req, res) => {
     try {

@@ -53,6 +53,7 @@ router.post("/login", async (req, res) => {
       res.cookie("refreshToken", refreshToken, {
         maxAge: 2 * 60 * 60 * 1000,
         httpOnly: true,
+        path: "/refresh",
         sameSite: "strict",
       });
       res.send({ message: "Logged In Successfully" });
@@ -66,7 +67,7 @@ router.post("/login", async (req, res) => {
 
 router.post(
   "/logout",
-  authMiddleware.authenticationMiddleware,
+  authMiddleware.authenticationMiddleware(),
   async (req, res) => {
     let refreshToken = authUtils.extractRefreshToken(req);
     if (!refreshToken) return authUtils.UnauthorizedResponse(res);
@@ -75,5 +76,19 @@ router.post(
     res.send({ message: "Logged Out Successfully" });
   },
 );
+
+router.get("/refresh", authMiddleware.authenticationMiddleware(true), async (req, res) => {
+  res.send({
+    message: "Refreshed"
+  });
+})
+
+
+router.get("/verify" , authMiddleware.authenticationMiddleware(true), async (req, res) => {
+  res.send({
+    message: "Verified",
+  });
+});
+
 
 export default router;
