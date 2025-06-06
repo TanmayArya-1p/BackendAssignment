@@ -21,6 +21,16 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
+app.get("/", function (req, res) {
+  res.render("index", { title: "error" });
+});
+app.get("/login", function (req, res) {
+  res.render("login", { title: "Login" });
+})
+app.get("/register", function (req, res) {
+  res.render("register", { title: "Register" });
+})
+
 app.use("/api/auth", authRouter);
 app.use("/api/items", itemsRouter);
 app.use("/api/users", usersRouter);

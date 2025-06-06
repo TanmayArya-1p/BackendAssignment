@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+.sbutton {
+    background-color: white;
+    border-width: 2px;
+    box-shadow: white;
+    border-radius: 0.25rem;
+    padding-inline: 1rem;
+    padding-block: 0.5rem;
+    transition: transform 0.1s linear;
+    font-family: "Ubuntu", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+}
+
+
+
+.sbutton:hover {
+    transform: translateY(-0.1rem);
+    transition: transform 0.1s linear;
+}
+
+
+body {
+    background-color: rgb(255, 239, 227);
+}
+
+.ubuntu-light {
+  font-family: "Ubuntu", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.ubuntu-regular {
+  font-family: "Ubuntu", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.ubuntu-medium {
+  font-family: "Ubuntu", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.ubuntu-bold {
+  font-family: "Ubuntu", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.ubuntu-light-italic {
+  font-family: "Ubuntu", sans-serif;
+  font-weight: 300;
+  font-style: italic;
+}
+
+.ubuntu-regular-italic {
+  font-family: "Ubuntu", sans-serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.ubuntu-medium-italic {
+  font-family: "Ubuntu", sans-serif;
+  font-weight: 500;
+  font-style: italic;
+}
+
+.ubuntu-bold-italic {
+  font-family: "Ubuntu", sans-serif;
+  font-weight: 700;
+  font-style: italic;
+}
