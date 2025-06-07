@@ -9,5 +9,4 @@ let orderColourMap = {
 export {orderColourMap};
 
 //TODO: ADD FILTERING FOR ITEMS
-//TODO: DISPLAY TAGS
 //TODO: ADD STATUS FOR ITEMS

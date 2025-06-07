@@ -62,7 +62,7 @@
     
     <div class="mt-5 ubuntu-bold text-2xl ml-12">Items Available</div>
 
-    <div id="items-container" class="flex flex-row mt-5 ml-12 flex-wrap gap-3 items-center">
+    <div id="items-container" class="flex flex-row mt-5 ml-12 flex-wrap gap-3 items-center w-[80%]">
         <% for(let i=0; i<items.length ; i++) { %>
             <div href=<%= `/items/${items[i].id}` %>  class="item-card">
                 <img src="<%= items[i].image %>" style="height: 6rem; width: auto;">
@@ -70,6 +70,11 @@
                     <h2 class="text-lg font-bold ubuntu-bold"><%= items[i].name %></h2>
                     <p class="mt-2 text-gray-500"><%= items[i].description %></p>
                     <p class="mt-2 text-gray-800">Price: ₹<%= items[i].price %></p>
+                    <div id="tags" class="flex flex-row flex-wrap gap-2 mt-1">
+                        <% for(let j=0; j<items[i].tags.length ; j++) { %>
+                            <span class="tag"><%= items[i].tags[j][1] %></span>
+                        <% } %>
+                    </div>
 
                 </div>
             </div>

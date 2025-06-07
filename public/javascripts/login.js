@@ -19,6 +19,5 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 
-// TODO: COLLECT ALL BILL DATA AND STORE IT
 
 

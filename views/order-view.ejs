@@ -85,7 +85,7 @@
 
     </nav>
 
-    <div id="page-container" class="mt-8 ml-8">
+    <div id="page-container" class="mt-8 ml-8 mb-30">
 
         <div class="ubuntu-bold text-4xl">Order #<%= order.id %>  ( <span class=<%= `text-${orderColourMap[order.status]}` %> ><%= order.status %></span>  ) </div>
         <div class="ubuntu-regular text-xl mt-4">
@@ -144,7 +144,7 @@
 
         <div class="ubuntu-bold text-3xl mt-12">Add more Items</div>
 
-        <div id="item-selector" class="flex flex-row flex-wrap gap-4 mt-4 overflow-auto p-2 border rounded-xl" style="max-height: 32rem;">
+        <div id="item-selector" class="flex flex-row flex-wrap gap-4 mt-4 overflow-auto p-2 border rounded-xl w-[70%]" style="max-height: 32rem;">
             <% for(let i=0; i<items.length ; i++) { %>
                 <div href=<%= `/items/${items[i].id}` %>  class="item-card" style="width:30rem">
                     <img src="<%= items[i].image %>" style="height: 6rem; width: auto;">
@@ -172,6 +172,11 @@
                                 </button>
                                 
                             </div>
+                        </div>
+                        <div id="tags" class="flex flex-row flex-wrap gap-2">
+                            <% for(let j=0; j<items[i].tags.length ; j++) { %>
+                                <span class="tag"><%= items[i].tags[j][1] %></span>
+                            <% } %>
                         </div>
                         <input type="text" id=<%= `instructions-${items[i].id}` %> placeholder="Instructions" class="border p-2 rounded w-2rem mt-2">
 
