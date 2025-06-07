@@ -53,7 +53,7 @@ router.post("/login", async (req, res) => {
       res.cookie("refreshToken", refreshToken, {
         maxAge: 2 * 60 * 60 * 1000,
         httpOnly: true,
-        path: "/refresh",
+        path: "/api/auth",
         sameSite: "strict",
       });
       res.send({ message: "Logged In Successfully" });
@@ -67,12 +67,15 @@ router.post("/login", async (req, res) => {
 
 router.post(
   "/logout",
-  authMiddleware.authenticationMiddleware(),
+  authMiddleware.authenticationMiddleware(true),
   async (req, res) => {
     let refreshToken = authUtils.extractRefreshToken(req);
+    console.log("GOT REFRESH TOKEN", refreshToken);
     if (!refreshToken) return authUtils.UnauthorizedResponse(res);
     await jwt.verifyRefreshToken(refreshToken, res.locals.user, true);
     await db.Jti.cleanupJti();
+    res.clearCookie('authToken');
+    res.clearCookie('refreshToken');
     res.send({ message: "Logged Out Successfully" });
   },
 );

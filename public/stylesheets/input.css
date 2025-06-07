@@ -1,28 +1,28 @@
 @import "tailwindcss";
 
 .sbutton {
-    background-color: white;
-    border-width: 2px;
-    box-shadow: white;
-    border-radius: 0.25rem;
-    padding-inline: 1rem;
-    padding-block: 0.5rem;
-    transition: transform 0.1s linear;
-    font-family: "Ubuntu", sans-serif;
-    font-weight: 500;
-    font-style: normal;
+  background-color: white;
+  border-width: 2px;
+  box-shadow: white;
+  border-radius: 0.25rem;
+  padding-inline: 1rem;
+  padding-block: 0.5rem;
+  transition: transform 0.1s linear;
+  font-family: "Ubuntu", sans-serif;
+  font-weight: 500;
+  font-style: normal;
 }
 
 
 
 .sbutton:hover {
-    transform: translateY(-0.1rem);
-    transition: transform 0.1s linear;
+  transform: translateY(-0.1rem);
+  transition: transform 0.1s linear;
 }
 
 
 body {
-    background-color: rgb(255, 239, 227);
+  background-color: rgb(255, 239, 227);
 }
 
 .ubuntu-light {

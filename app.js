@@ -25,15 +25,15 @@ app.use(express.static(path.join(__dirname, "public")));
 app.get("/" ,function (req, res) {
   res.render("index");
 });
-app.get("/login", authMiddleware.isAuthenticated,function (req, res) {
+app.get("/login",function (req, res) {
   res.render("login");
 })
-app.get("/register", authMiddleware.isAuthenticated,function (req, res) {
+app.get("/register",function (req, res) {
   res.render("register");
 })
 
 app.get("/home", authMiddleware.authenticationMiddleware(false,true) ,function (req, res) {
-  res.render(`${res.locals.user.role}-home`, { title: "Register" });
+  res.render(`${res.locals.user.role}-home`);
 })
 
 app.use("/api/auth", authRouter);

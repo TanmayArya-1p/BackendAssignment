@@ -1,19 +1,34 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <title>InOrder - Home</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
-    <link rel="stylesheet" href="/stylesheets/style.css">
+    
+    <link rel="stylesheet" href="/stylesheets/style.css">  
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+    <script src="javascripts/refresh.js" defer></script>
+    <script defer>
+        function logoutHandler() {
+            fetch('/api/auth/logout', {
+                method: 'POST',
+            })
+            .then(res => {
+                if (res.status === 200) {
+                    window.location.href = '/';
+                } else {
+                    alert('Logout failed');
+                }
+            })
+        }
+    </script>
 </head>
 <body>
-    <div class="min-h-screen flex flex-col items-center justify-center gap-10">
-        <h1 class="text-7xl mb-8 font-thin ubuntu-regular">InOrder</h1>
-        <div class="flex space-x-4">
-            <a class="sbutton" href="/login">Login</a>
-            <a class="sbutton" href="/register">Sign Up</a>
-        </div>
-    </div>
-    
+    <nav class="flex items-center flex-row justify-between py-2 px-4 border-b-2 border-b-gray-500">
+        <h1 class="text-3xl font-thin ubuntu-regular text-center align-middle">InOrder</h1>
+        <button class="sbutton h-12" onclick="logoutHandler()">Logout</button>
+    </nav>
 </body>
 </html>

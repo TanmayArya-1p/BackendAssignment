@@ -41,7 +41,7 @@ export async function isAuthenticated(req,res,next) {
       let newRefreshToken = await jwt.createRefreshToken(user);
       let newAuthToken = await jwt.createAuthToken(user);
 
-      res.cookie("refreshToken", newRefreshToken, path="/refresh" ,{ httpOnly: true });
+      res.cookie("refreshToken", newRefreshToken, path="/api/auth" ,{ httpOnly: true });
       res.cookie("authToken", newAuthToken, { httpOnly: true });
     }
     res.redirect("/home")
