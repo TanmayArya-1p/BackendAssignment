@@ -7,7 +7,7 @@ export default class Item {
     this.hydrated = false;
     if (typeof p === "object") {
       Object.assign(this, p);
-      if (this.id && this.name && this.description != undefined && this.price)
+      if (this.id && this.name && this.description != undefined && this.price && this.image)
         this.hydrated = true;
     } else if (typeof p === "number") {
       this.id = p;
@@ -17,7 +17,7 @@ export default class Item {
   }
 
   isHydrated() {
-    if (this.id && this.name && this.description != undefined && this.price)
+    if (this.id && this.name && this.description != undefined && this.price && this.image)
       this.hydrated = true;
     return this.hydrated;
   }
@@ -32,10 +32,17 @@ export default class Item {
     if (!this.name || this.description == undefined || !this.price)
       throw new Error("Not all required parameters are provided");
 
-    let newID = await db.query(
-      "INSERT INTO items (name, description, price) VALUES (?, ?, ?)",
-      [this.name, this.description, this.price],
-    );
+    let newID = null;
+    if(this.image)
+      newID = await db.query(
+        "INSERT INTO items (name, description, price, image) VALUES (?, ?, ?, ?)",
+        [this.name, this.description, this.price ,this.image],
+      );
+    else
+      newID = await db.query(
+        "INSERT INTO items (name, description, price) VALUES (?, ?, ?)",
+        [this.name, this.description, this.price],
+      );
     newID = newID[0].insertId;
     this.id = newID;
     let item = await Item.getItemById(newID);
@@ -47,7 +54,7 @@ export default class Item {
         }
       }
     }
-
+    this.image = item.image
     this.hydrated = true;
     return this;
   }
@@ -62,11 +69,13 @@ export default class Item {
     name = null,
     description = null,
     price = null,
+    image = null,
     updtags = ["NOAC"],
   }) {
     if (!name) name = this.name;
     if (!description) description = this.description;
     if (!price) price = this.price;
+    if(!image) image = this.image;
 
     if (updtags.length != 1 || updtags[0] !== "NOAC") {
       let prevItem = this;
@@ -81,12 +90,13 @@ export default class Item {
     }
 
     await db.query(
-      "UPDATE items SET name = ?, description = ?, price = ? WHERE id = ?",
-      [name, description, price, this.id],
+      "UPDATE items SET name = ?, description = ?, price = ?, image = ? WHERE id = ?",
+      [name, description, price,image, this.id],
     );
     this.name = name;
     this.description = description;
     this.price = price;
+    this.image = image;
     this.tags = await tags.getItemTags(this.id);
 
     return this;
@@ -115,7 +125,7 @@ export default class Item {
 
   static #deriveItem(obj) {
     let res = new Item(obj);
-    if (res.id && res.name && res.description && res.price) {
+    if (res.id && res.name && res.description && res.price && res.image) {
       res.hydrated = true;
     }
     return res;
