@@ -72,3 +72,45 @@ body {
   font-weight: 700;
   font-style: italic;
 }
+
+
+.order-card {
+  background-color: white;
+  border-radius: 0.25rem;
+  border-width: 2px;
+  padding: 1rem;
+  box-shadow: white;
+  transition: transform 0.1s linear;
+  cursor: pointer;
+  flex-direction: row;
+  display: flex;
+  gap:1rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.order-card:hover {
+  transform: translateY(-0.2rem);
+  transition: transform 0.1s linear;
+}
+
+
+.add-order-card {
+  background-color: white;
+  border-radius: 0.25rem;
+  border-width: 2px;
+  padding: 1rem;
+  box-shadow: white;
+  transition: transform 0.1s linear;
+  cursor: pointer;
+  flex-direction: column;
+  display: flex;
+  gap:0.5rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.add-order-card:hover {
+  transform: translateY(-0.2rem);
+  transition: transform 0.1s linear;
+}

@@ -9,6 +9,7 @@ import path from "path";
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import * as authMiddleware from "./middleware/auth.js";
+import db from "./db/index.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -32,8 +33,23 @@ app.get("/register",function (req, res) {
   res.render("register");
 })
 
-app.get("/home", authMiddleware.authenticationMiddleware(false,true) ,function (req, res) {
-  res.render(`${res.locals.user.role}-home`);
+
+let orderColourMap = {
+  'pending' : 'red-500',
+  'preparing' : 'yellow-500',
+  'served' : 'teal-500',
+  'billed' : 'green-500',
+  'paid': 'green-500'
+}
+
+app.get("/home", authMiddleware.authenticationMiddleware(false,true) ,async function (req, res) {
+  let orders = null;
+  if( res.locals.user.role === "customer") {
+    orders = await db.Order.getAllOrdersByUser(res.locals.user);
+  } else {
+    orders = await db.Order.getAllOrders();
+  }
+  res.render(`${res.locals.user.role}-home` , {user: res.locals.user , orders : orders, items: (await db.Item.getAllItems()) , orderColourMap : orderColourMap});
 })
 
 app.use("/api/auth", authRouter);

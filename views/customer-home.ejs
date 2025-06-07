@@ -27,8 +27,37 @@
 </head>
 <body>
     <nav class="flex items-center flex-row justify-between py-2 px-4 border-b-2 border-b-gray-500">
-        <h1 class="text-3xl font-thin ubuntu-regular text-center align-middle">InOrder</h1>
-        <button class="sbutton h-12" onclick="logoutHandler()">Logout</button>
+        <a class="text-3xl font-thin ubuntu-regular text-center align-middle" href="/home">InOrder</a>
+        <div class="flex flex-row gap-6 justify-center items-center">
+            <h1 class="text-xl ubuntu-bold"><%= user.username %></h1>
+            <button class="sbutton h-12 cursor-pointer" onclick="logoutHandler()">Logout</button>
+        </div>
     </nav>
+    <div class="mt-5 ubuntu-bold text-2xl ml-12">Your Orders</div>
+
+    <div id="orders-container" class="flex flex-row mt-5 ml-12 flex-wrap gap-3 items-center">
+        <% if (orders.length !== 0) { %>
+            <% for(let i=0; i<orders.length ; i++) { %>
+                <a href=<%= `/order/${orders[i].id}` %>  class="order-card">
+                    <div>
+                        <h2 class="text-lg font-bold ubuntu-bold">Order <%= orders[i].id %> ( <span class=<%= `text-${orderColourMap[orders[i].status]}` %> ><%= orders[i].status %></span>  )</h2>
+                        <p class="mt-2 text-gray-500">Created At <%= new Date(orders[i].issued_at).toLocaleString() %></p>
+                    </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                    </svg>
+                </a>
+            <% } %>
+        <% } else { %>  
+            <p class="text-gray-500">No orders yet</p>
+        <% } %>
+            <a href="/order/create" class="add-order-card">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                </svg>
+                Create Order
+            </a>
+    </div>
+
 </body>
 </html>
