@@ -8,6 +8,7 @@ import logger from "morgan";
 import path from "path";
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import * as authMiddleware from "./middleware/auth.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -21,14 +22,18 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.get("/", function (req, res) {
-  res.render("index", { title: "error" });
+app.get("/" ,function (req, res) {
+  res.render("index");
 });
-app.get("/login", function (req, res) {
-  res.render("login", { title: "Login" });
+app.get("/login", authMiddleware.isAuthenticated,function (req, res) {
+  res.render("login");
 })
-app.get("/register", function (req, res) {
-  res.render("register", { title: "Register" });
+app.get("/register", authMiddleware.isAuthenticated,function (req, res) {
+  res.render("register");
+})
+
+app.get("/home", authMiddleware.authenticationMiddleware(false,true) ,function (req, res) {
+  res.render(`${res.locals.user.role}-home`, { title: "Register" });
 })
 
 app.use("/api/auth", authRouter);

@@ -1,3 +1,4 @@
+import res from "express/lib/response.js";
 import db from "./db.js";
 import Item from "./item.js";
 
@@ -89,6 +90,20 @@ export default class Order {
     );
 
     return newOrder.billable_amount;
+  }
+
+  static async getAllOrdersByUser(user,limit = 10, offset = 0) {
+    let orders;
+    if (limit === -1) orders = await db.query("SELECT * FROM orders WHERE issued_by = ?", [
+      user.id,
+    ]);
+    else
+      orders = await db.query("SELECT * FROM orders WHERE issued_by = ? LIMIT ? OFFSET ?", [
+        user.id,
+        limit,
+        offset,
+      ]);
+    return orders[0].map((order) => new Order(order));
   }
 
   static async updateOrder(

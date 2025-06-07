@@ -13,10 +13,12 @@ router.get(
   authMiddleware.authenticationMiddleware(),
   authMiddleware.authorizationMiddleware(authUtils.CUSTOMER),
   async (req, res) => {
-    if (!req.params.limit) req.params.limit = -1;
-    if (!req.params.offset) req.params.offset = 0;
-    let limit = Number(req.params.limit);
-    let offset = Number(req.params.offset);
+    let limit = Number(req.query.limit);
+    let offset = Number(req.query.offset);
+
+    if (isNaN(limit)) limit = -1;
+    if (isNaN(offset)) offset = 0;
+
     let items = await db.Item.getAllItems(limit, offset);
     res.send(items);
   },
