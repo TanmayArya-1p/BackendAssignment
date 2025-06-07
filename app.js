@@ -49,7 +49,7 @@ app.get("/home", authMiddleware.authenticationMiddleware(false,true) ,async func
   } else {
     orders = await db.Order.getAllOrders();
   }
-  res.render(`${res.locals.user.role}-home` , {user: res.locals.user , orders : orders, items: (await db.Item.getAllItems()) , orderColourMap : orderColourMap});
+  res.render(`${res.locals.user.role}-home` , {user: res.locals.user , orders : orders, items: (await db.Item.getAllItems()) , orderColourMap : orderColourMap , items: await db.Item.getAllItems()});
 })
 
 app.use("/api/auth", authRouter);

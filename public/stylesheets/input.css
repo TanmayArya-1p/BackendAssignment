@@ -94,6 +94,18 @@ body {
   transition: transform 0.1s linear;
 }
 
+.item-card {
+  background-color: white;
+  border-radius: 0.25rem;
+  border-width: 2px;
+  padding: 1rem;
+  box-shadow: white;
+  flex-direction: row;
+  display: flex;
+  gap:1rem;
+  align-items: center;
+  justify-content: space-between;
+}
 
 .add-order-card {
   background-color: white;

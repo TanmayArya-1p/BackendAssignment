@@ -19,7 +19,6 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 
-// TODO: CREATE IMAGE UPLAOD ON CREATE ITEM AND RETURN THAT URL
 // TODO: COLLECT ALL BILL DATA AND STORE IT
 
 
