@@ -119,9 +119,10 @@ async function jtiSubmoduleTest() {
 }
 
 async function initAdmin() {
-  let u = new db.User({ username: "admin", password: "admin", role: "admin" });
-  await u.create();
-  console.log(u);
+  // let u = new db.User({ username: "admin", password: "admin", role: "admin" });
+  // await u.create();
+  // console.log(u);
+  await db.OrderItems.bumpStatus(2)
 }
 
 switch (process.argv[2]) {

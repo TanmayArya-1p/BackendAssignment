@@ -111,6 +111,9 @@
                         <th scope="col" class="px-6 py-3">
                             Total Price
                         </th>
+                        <th scope="col" class="px-6 py-3">
+                            Status
+                        </th>
                     </tr>
                 </thead>
                 <tbody class="text-xl text-center">
@@ -129,6 +132,11 @@
                             <td class="px-6 py-4">
                                 ₹<%= order.ordered_items[i].price%>
                             </td>
+                            <td class="px-6 py-4">
+                                <span class=<%= `text-${orderColourMap[order.ordered_items[i].status]}` %> >
+                                    <%= order.ordered_items[i].status %>
+                                </span>
+                            </td>
                         </tr>
                         <% total += order.ordered_items[i].price; %>
                     <% } %>
@@ -137,6 +145,7 @@
                         <td></td>
                         <td class="px-6 py-4 text-right">Total</td>
                         <td class="px-6 py-4">₹<%= total %></td>
+                        <td></td>
                     </tr>
                 </tbody>
             </table>
