@@ -96,7 +96,7 @@ body {
 
 .item-card {
   background-color: white;
-  border-radius: 0.25rem;
+  border-radius: 0.5rem;
   border-width: 2px;
   padding: 1rem;
   box-shadow: white;
@@ -126,3 +126,4 @@ body {
   transform: translateY(-0.2rem);
   transition: transform 0.1s linear;
 }
+

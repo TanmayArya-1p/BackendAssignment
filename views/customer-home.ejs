@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
-    <script src="javascripts/refresh.js" defer></script>
+    <script src="/javascripts/refresh.js" defer></script>
     <script defer>
         function logoutHandler() {
             fetch('/api/auth/logout', {
@@ -34,6 +34,11 @@
         </div>
     </nav>
     <div class="mt-5 ubuntu-bold text-2xl ml-12">Your Orders</div>
+    <a class="text-red-500"></a>
+    <a class="text-yellow-500"></a>
+    <a class="text-teal-500"></a>
+    <a class="text-green-500"></a>
+
 
     <div id="orders-container" class="flex flex-row mt-5 ml-12 flex-wrap gap-3 items-center">
         <% for(let i=0; i<orders.length ; i++) { %>

@@ -63,7 +63,7 @@ router.get("/:orderid", async (req, res) => {
     ) {
       return res.status(401).send({ message: "Unauthorized" });
     } else {
-      console.log("PASSECHECKSD", res.locals.user);
+      console.log("PASSESCHECKED", res.locals.user);
     }
     res.send(order);
   } catch (err) {

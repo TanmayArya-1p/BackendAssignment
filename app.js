@@ -10,6 +10,7 @@ import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import * as authMiddleware from "./middleware/auth.js";
 import db from "./db/index.js";
+import { orderColourMap } from "./utils/misc.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -33,15 +34,6 @@ app.get("/register",function (req, res) {
   res.render("register");
 })
 
-
-let orderColourMap = {
-  'pending' : 'red-500',
-  'preparing' : 'yellow-500',
-  'served' : 'teal-500',
-  'billed' : 'green-500',
-  'paid': 'green-500'
-}
-
 app.get("/home", authMiddleware.authenticationMiddleware(false,true) ,async function (req, res) {
   let orders = null;
   if( res.locals.user.role === "customer") {
@@ -49,8 +41,32 @@ app.get("/home", authMiddleware.authenticationMiddleware(false,true) ,async func
   } else {
     orders = await db.Order.getAllOrders();
   }
-  res.render(`${res.locals.user.role}-home` , {user: res.locals.user , orders : orders, items: (await db.Item.getAllItems()) , orderColourMap : orderColourMap , items: await db.Item.getAllItems()});
+  res.render(`${res.locals.user.role}-home` , {user: res.locals.user , orders : orders, items: (await db.Item.getAllItems()) , orderColourMap : orderColourMap});
 })
+
+app.get("/order/create",authMiddleware.authenticationMiddleware(false,true) ,async function (req, res) {
+  res.render("create-order" , {user: res.locals.user, items: (await db.Item.getAllItems()) });
+})
+
+
+app.get("/order/:orderid",authMiddleware.authenticationMiddleware(false,true) ,async function (req, res) {
+  let order = await db.Order.getOrderById(Number(req.params.orderid));
+  if (!order) {
+    return res.status(404).send("Not Found");
+  }
+
+  if (res.locals.user.role === "customer" && order.issued_by !== res.locals.user.id) {
+    return res.status(403).send("Forbidden");
+  }
+
+  res.render("order-view" , {user: res.locals.user, items: (await db.Item.getAllItems()) , order: order, orderColourMap : orderColourMap});
+})
+
+
+app.get("/register",function (req, res) {
+  res.render("register");
+})
+
 
 app.use("/api/auth", authRouter);
 app.use("/api/items", itemsRouter);
