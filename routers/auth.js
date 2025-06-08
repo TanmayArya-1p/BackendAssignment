@@ -56,7 +56,7 @@ router.post("/login", async (req, res) => {
         path: "/api/auth",
         sameSite: "strict",
       });
-      res.send({ message: "Logged In Successfully" });
+      res.send({ message: "Logged In Successfully" , authToken: authToken, refreshToken: refreshToken });
     } else {
       res.status(401).send({ message: "Invalid username or password." });
     }

@@ -3,10 +3,13 @@ import db from "../db/index.js";
 import * as jwt from "../utils/jwt.js";
 import * as authUtils from "../utils/auth.js";
 import * as authMiddleware from "../middleware/auth.js";
+import fileUpload from "express-fileupload";
+import path from "path";
 
 let router = express.Router();
 
 router.use(express.json());
+router.use(fileUpload());
 
 router.get(
   "/",
@@ -97,5 +100,17 @@ router.put(
     }
   },
 );
+
+
+router.post('/upload',   
+  authMiddleware.authenticationMiddleware(),
+  authMiddleware.authorizationMiddleware(authUtils.CHEF),
+  (req, res) => {
+  const { image } = req.files;
+  if (!image) return res.sendStatus(400);
+  image.mv(path.join(process.cwd(), '/public/images', image.name));
+
+  res.status(200).send({ message: "File uploaded successfully" });
+});
 
 export default router;
