@@ -35,13 +35,29 @@ app.get("/register",function (req, res) {
 })
 
 app.get("/home", authMiddleware.authenticationMiddleware(false,true) ,async function (req, res) {
+
+  let selectedTags = req.query.tags ? req.query.tags.split(",") : [];
+  let selectHM = {}
+  for(const i of selectedTags) {
+    selectHM[i] = true;
+  }
+
+
   let orders = null;
   if( res.locals.user.role === "customer") {
     orders = await db.Order.getAllOrdersByUser(res.locals.user);
   } else {
     orders = await db.Order.getAllOrders();
   }
-  res.render(`${res.locals.user.role}-home` , {user: res.locals.user , orders : orders, items: (await db.Item.getAllItems()) , orderColourMap : orderColourMap});
+  
+
+  let items=null;
+  if(selectedTags.length > 0) {
+    items= await db.Item.getItemsofTag(selectedTags)
+  } else {
+    items = await db.Item.getAllItems();
+  }
+  res.render(`${res.locals.user.role}-home` , {user: res.locals.user , orders : orders, items: items , orderColourMap : orderColourMap, tags: (await db.Tags.getAllTags()) , selectedTags: selectHM}); 
 })
 
 app.get("/order/create",authMiddleware.authenticationMiddleware(false,true) ,async function (req, res) {

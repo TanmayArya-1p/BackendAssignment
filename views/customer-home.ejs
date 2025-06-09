@@ -23,6 +23,21 @@
                 }
             })
         }
+        let selectedTags = new URLSearchParams(window.location.search).get('tags').split(',');
+        if(selectedTags[0] === '') {
+            selectedTags = [];
+        } else {
+            selectedTags = selectedTags.map(tag => tag.trim());
+        }
+        function toggleTag(tag_name) {
+            if(selectedTags.includes(tag_name)) {
+                selectedTags = selectedTags.filter(tag => tag !== tag_name);
+            } else {
+                selectedTags.push(tag_name);
+            }
+            window.location.href = `/home?tags=${selectedTags.join(',')}`;
+        }
+
     </script>
 </head>
 <body>
@@ -62,7 +77,19 @@
     
     <div class="mt-5 ubuntu-bold text-2xl ml-12">Items Available</div>
 
-    <div id="items-container" class="flex flex-row mt-5 ml-12 flex-wrap gap-3 items-center w-[80%]">
+    <div id="tags-container" class="flex flex-row mt-5 ml-12 gap-2">
+        <div class="ubuntu-regular text-xl">Filters: </div>
+        <% for(const i in selectedTags) { %>
+            <button onclick=<%= `toggleTag("${i}")`  %>  class="tag tag-selector tag-selected"><%= i %></button>
+        <% } %>
+        <% for(let j=0; j<tags.length ; j++) { %>
+            <% if(selectedTags[tags[j].name]) continue; %>
+            <button onclick=<%= `toggleTag("${tags[j].name}")`  %>  class="tag tag-selector"><%= tags[j].name %></button>
+        <% } %>
+    </div>
+
+
+    <div id="" class="flex flex-row flex-wrap mt-5 ml-12 gap-3 items-center w-[80%]">
         <% for(let i=0; i<items.length ; i++) { %>
             <div href=<%= `/items/${items[i].id}` %>  class="item-card">
                 <img src="<%= items[i].image %>" style="height: 6rem; width: auto;">

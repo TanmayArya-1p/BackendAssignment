@@ -103,6 +103,7 @@ body {
   flex-direction: row;
   display: flex;
   gap:1rem;
+  width: 22rem;
   align-items: center;
   justify-content: space-between;
 }
@@ -127,10 +128,18 @@ body {
   transition: transform 0.1s linear;
 }
 
-span.tag {
-  border: 1px solid;
+.tag {
+  border: 2px solid;
   border-radius: 0.25rem;
   text-align: center;
   font-family: "Ubuntu", sans-serif;
   padding: 0.1rem 0.5rem;
+}
+
+.tag-selected {
+  background-color: rgb(243, 251, 255)
+}
+
+.tag-selector {
+  cursor: pointer
 }

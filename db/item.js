@@ -137,17 +137,18 @@ export default class Item {
   }
 
 
-  static async getItemsofTag(tag_names=[]) {
+  static async getItemsofTag(tag_names=[],limit = 10, offset = 0) {
 
-    let inPl= tag_names.map((_) => `? ,`);
-    inPl=inPL.slice(0, -2);
-
+    let inPl= tag_names.map((_) => `?`).join(",");
+    console.log("QUERY STRING" ,`SELECT DISTINCT  items.id,items.name,items.description,items.price,items.image FROM items INNER JOIN tag_rel ON items.id=tag_rel.item_id LEFT JOIN tags ON tags.id=tag_rel.tag_id WHERE tags.name IN (${inPl})` )
     let items = await db.query(
       `SELECT DISTINCT  items.id,items.name,items.description,items.price,items.image FROM items INNER JOIN tag_rel ON items.id=tag_rel.item_id LEFT JOIN tags ON tags.id=tag_rel.tag_id WHERE tags.name IN (${inPl})`  ,tag_names
     );
     if (!items[0]) return [];
-    return items.map((a) => Item.#deriveItem(a));
+    return await Promise.all(items[0].slice(offset,offset+limit).map(async (a) => await Item.getItemById(a.id)));
   }
 }
 
+
+//TODO CREATE A CACHE FOR ITEMS TAG REL
 //TODO : OPENAPI SPEC WITH SWAGGER DOCS FOR CONTROLLER
