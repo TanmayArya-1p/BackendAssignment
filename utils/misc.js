@@ -19,5 +19,5 @@ function paginate(arr,req) {
 
 export {orderColourMap,paginate};
 
-//TODO: ADD FILTERING FOR ITEMS
+//TODO: ADD FILTERING FOR ITEMS IN CREATE ORDER PAGE AND ORDER VIEW
 //TODO: TEST AND FIX REFRESH TOKEN
