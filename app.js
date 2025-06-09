@@ -65,7 +65,7 @@ app.get("/home", authMiddleware.authenticationMiddleware(false,true) ,async func
 })
 
 app.get("/order/create",authMiddleware.authenticationMiddleware(false,true) ,async function (req, res) {
-  res.render("create-order" , {user: res.locals.user, items: (await db.Item.getAllItems()) });
+  res.render("create-order" , {user: res.locals.user, items: (await db.Item.getAllItems()),tags: (await db.Tags.getAllTags()) });
 })
 
 

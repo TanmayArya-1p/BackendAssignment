@@ -146,3 +146,15 @@ export default class ItemFilter {
 
     }
 }
+
+
+export function toggleTag(tag) {
+    itemf.toggleFilterTag(tag);
+    let tagElement = document.getElementById(`${tag}-toggler`);
+    if(tagElement.classList.contains('tag-selected')) {
+        tagElement.classList.remove('tag-selected');
+    } else {
+        tagElement.classList.add('tag-selected');
+    }
+}
+window.toggleTag = toggleTag;

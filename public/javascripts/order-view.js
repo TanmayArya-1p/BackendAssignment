@@ -17,29 +17,3 @@ async function initPriceIndex() {
 }
 initPriceIndex();
 
-
-export function logoutHandler() {
-    fetch('/api/auth/logout', {
-        method: 'POST',
-    })
-    .then(res => {
-        if (res.status === 200) {
-            window.location.href = '/';
-        } else {
-            alert('Logout failed');
-        }
-    })
-}
-window.logoutHandler = logoutHandler;
-
-
-export function toggleTag(tag) {
-    itemf.toggleFilterTag(tag);
-    let tagElement = document.getElementById(`${tag}-toggler`);
-    if(tagElement.classList.contains('tag-selected')) {
-        tagElement.classList.remove('tag-selected');
-    } else {
-        tagElement.classList.add('tag-selected');
-    }
-}
-window.toggleTag = toggleTag;
