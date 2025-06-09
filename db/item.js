@@ -135,6 +135,19 @@ export default class Item {
     }
     return res;
   }
+
+
+  static async getItemsofTag(tag_names=[]) {
+
+    let inPl= tag_names.map((_) => `? ,`);
+    inPl=inPL.slice(0, -2);
+
+    let items = await db.query(
+      `SELECT DISTINCT  items.id,items.name,items.description,items.price,items.image FROM items INNER JOIN tag_rel ON items.id=tag_rel.item_id LEFT JOIN tags ON tags.id=tag_rel.tag_id WHERE tags.name IN (${inPl})`  ,tag_names
+    );
+    if (!items[0]) return [];
+    return items.map((a) => Item.#deriveItem(a));
+  }
 }
 
 //TODO : OPENAPI SPEC WITH SWAGGER DOCS FOR CONTROLLER

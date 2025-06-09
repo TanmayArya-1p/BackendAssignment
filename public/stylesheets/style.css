@@ -222,9 +222,6 @@
   .mb-8 {
     margin-bottom: calc(var(--spacing) * 8);
   }
-  .mb-10 {
-    margin-bottom: calc(var(--spacing) * 10);
-  }
   .mb-30 {
     margin-bottom: calc(var(--spacing) * 30);
   }
@@ -267,9 +264,6 @@
   }
   .w-full {
     width: 100%;
-  }
-  .w-min {
-    width: min-content;
   }
   .max-w-xl {
     max-width: var(--container-xl);
@@ -344,6 +338,9 @@
   }
   .overflow-auto {
     overflow: auto;
+  }
+  .overflow-hidden {
+    overflow: hidden;
   }
   .overflow-x-auto {
     overflow-x: auto;

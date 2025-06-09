@@ -76,12 +76,3 @@ CREATE TABLE IF NOT EXISTS tag_rel (
 CREATE INDEX tag_rel_item_id_idx ON tag_rel (item_id);
 
 CREATE INDEX tag_rel_tag_id_idx ON tag_rel (tag_id);
-
--- SUPPOSE I WANT TO FIND ALL ITEMS WITH TAG="HOT"
--- SELECT * FROM
---     items
---     RIGHT JOIN tags_rel
---         ON items.id=tags_rel.item_id
---     RIGHT JOIN tags
---         ON tags_rel.tag_id=tags.id
---     WHERE tags.name="HOT"

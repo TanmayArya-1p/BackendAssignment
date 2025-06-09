@@ -113,4 +113,14 @@ router.post('/upload',
   res.status(200).send({ message: "File uploaded successfully" });
 });
 
+
+router.get(
+  "/tags",
+  authMiddleware.authenticationMiddleware(),
+  authMiddleware.authorizationMiddleware(authUtils.CUSTOMER),
+  async (req, res) => {
+    res.send(await db.Tags.getAllTags());
+  },
+);
+
 export default router;
