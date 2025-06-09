@@ -10,7 +10,7 @@ import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import * as authMiddleware from "./middleware/auth.js";
 import db from "./db/index.js";
-import { orderColourMap } from "./utils/misc.js";
+import { orderColourMap,paginate } from "./utils/misc.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -53,11 +53,15 @@ app.get("/home", authMiddleware.authenticationMiddleware(false,true) ,async func
 
   let items=null;
   if(selectedTags.length > 0) {
-    items= await db.Item.getItemsofTag(selectedTags)
+    items= await db.Item.getItemsofTag(selectedTags, -1, 0);
   } else {
-    items = await db.Item.getAllItems();
+    items = await db.Item.getAllItems(-1,0);
   }
-  res.render(`${res.locals.user.role}-home` , {user: res.locals.user , orders : orders, items: items , orderColourMap : orderColourMap, tags: (await db.Tags.getAllTags()) , selectedTags: selectHM}); 
+
+  let page = paginate(items,req)
+  items=page.filtered
+  console.log(page)
+  res.render(`${res.locals.user.role}-home` , {user: res.locals.user , orders : orders, items: items , orderColourMap : orderColourMap, tags: (await db.Tags.getAllTags()) , selectedTags: selectHM , page:page}); 
 })
 
 app.get("/order/create",authMiddleware.authenticationMiddleware(false,true) ,async function (req, res) {

@@ -76,7 +76,7 @@ export default class User {
     return User.#deriveUser(user[0][0]);
   }
 
-  static async getAllUsers(limit = 10, offset = 0) {
+  static async getAllUsers(limit = 8, offset = 0) {
     if (limit === -1) var users = await db.query("SELECT * FROM users");
     else
       var users = await db.query("SELECT * FROM users LIMIT ? OFFSET ?", [

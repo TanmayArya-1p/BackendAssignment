@@ -108,6 +108,25 @@ body {
   justify-content: space-between;
 }
 
+#page-controller {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.page-controller-button {
+  background-color: white;
+  border-radius: 0.25rem;
+  border-width: 2px;
+  padding: 0.2rem;
+  padding-inline : 0.5rem;
+  box-shadow: white;
+  transition: transform 0.1s linear;
+  cursor: pointer;
+}
+
 .add-order-card {
   background-color: white;
   border-radius: 0.25rem;

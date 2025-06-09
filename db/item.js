@@ -115,7 +115,7 @@ export default class Item {
     return Item.#deriveItem(item[0][0]);
   }
 
-  static async getAllItems(limit = 10, offset = 0) {
+  static async getAllItems(limit = 8, offset = 0) {
     var items;
     if (limit !== -1) {
       items = await db.query("SELECT * FROM items LIMIT ? OFFSET ?", [
@@ -137,7 +137,7 @@ export default class Item {
   }
 
 
-  static async getItemsofTag(tag_names=[],limit = 10, offset = 0) {
+  static async getItemsofTag(tag_names=[]) {
 
     let inPl= tag_names.map((_) => `?`).join(",");
     console.log("QUERY STRING" ,`SELECT DISTINCT  items.id,items.name,items.description,items.price,items.image FROM items INNER JOIN tag_rel ON items.id=tag_rel.item_id LEFT JOIN tags ON tags.id=tag_rel.tag_id WHERE tags.name IN (${inPl})` )
@@ -145,7 +145,7 @@ export default class Item {
       `SELECT DISTINCT  items.id,items.name,items.description,items.price,items.image FROM items INNER JOIN tag_rel ON items.id=tag_rel.item_id LEFT JOIN tags ON tags.id=tag_rel.tag_id WHERE tags.name IN (${inPl})`  ,tag_names
     );
     if (!items[0]) return [];
-    return await Promise.all(items[0].slice(offset,offset+limit).map(async (a) => await Item.getItemById(a.id)));
+    return await Promise.all(items[0].map(async (a) => await Item.getItemById(a.id)));
   }
 }
 

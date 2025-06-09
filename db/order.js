@@ -92,7 +92,7 @@ export default class Order {
     return newOrder.billable_amount;
   }
 
-  static async getAllOrdersByUser(user,limit = 10, offset = 0) {
+  static async getAllOrdersByUser(user,limit = 8, offset = 0) {
     let orders;
     if (limit === -1) orders = await db.query("SELECT * FROM orders WHERE issued_by = ?", [
       user.id,
