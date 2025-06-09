@@ -79,7 +79,7 @@ app.get("/order/:orderid",authMiddleware.authenticationMiddleware(false,true) ,a
     return res.status(403).send("Forbidden");
   }
 
-  res.render("order-view" , {user: res.locals.user, items: (await db.Item.getAllItems()) , order: order, orderColourMap : orderColourMap});
+  res.render("order-view" , {user: res.locals.user, items: (await db.Item.getAllItems()) , order: order, orderColourMap : orderColourMap,tags: (await db.Tags.getAllTags())});
 })
 
 
