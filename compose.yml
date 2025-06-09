@@ -1,0 +1,19 @@
+services:
+  in-order:
+    build: .
+    ports:
+      - "4000:3000"
+    depends_on:
+      - db
+  db:
+    image: mysql:latest
+    restart: always
+    environment:
+      - MYSQL_PORT=3306
+      - MYSQL_USER=tanmay
+      - MYSQL_PASSWORD=123
+      - MYSQL_ROOT_PASSWORD=123
+      - MYSQL_ROOT_USER=root
+      - MYSQL_DATABASE=mvc
+    volumes:
+      - ./mysql-init:/docker-entrypoint-initdb.d

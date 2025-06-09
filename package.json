@@ -4,10 +4,11 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "reset-schema": "sudo mysql < schema.sql",
+    "reset-schema": "sudo mysql < mysql-init/schema.sql",
     "test": "node --env-file=.env tests.js",
     "start": "nodemon --env-file=.env ./bin/www",
-    "debug": "DEBUG=mvcassignment:* npm start"
+    "debug": "DEBUG=mvcassignment:* npm start",
+    "prod" : "node --env-file=.env ./bin/www"
   },
   "author": "",
   "license": "ISC",

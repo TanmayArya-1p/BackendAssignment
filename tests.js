@@ -119,10 +119,8 @@ async function jtiSubmoduleTest() {
 }
 
 async function initAdmin() {
-  // let u = new db.User({ username: "admin", password: "admin", role: "admin" });
-  // await u.create();
-  // console.log(u);
-  await db.OrderItems.bumpStatus(2)
+  let u = new db.User({ username: "admin", password: process.env.DEFAULT_ADMIN_PASSWORD === "" ? "admin" : process.env.DEFAULT_ADMIN_PASSWORD, role: "admin" });
+  await u.create();
 }
 
 switch (process.argv[2]) {
