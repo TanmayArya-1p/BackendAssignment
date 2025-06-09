@@ -22,7 +22,11 @@
 
 
 body {
-  background-color: rgb(255, 239, 227);
+  background-color: rgb(255, 243, 234);
+}
+
+nav {
+  background-color: white;
 }
 
 .ubuntu-light {
