@@ -166,3 +166,14 @@ nav {
 .tag-selector {
   cursor: pointer
 }
+
+.item-queue-card {
+  background-color: white;
+  border-radius: 0.25rem;
+  border-width: 2px;
+  padding-inline: 1rem;
+  box-shadow: white;
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}

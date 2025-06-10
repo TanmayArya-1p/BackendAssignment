@@ -47,6 +47,7 @@ CREATE TABLE IF NOT EXISTS order_items (
     instructions VARCHAR(255),
     quantity INT NOT NULL,
     price FLOAT NOT NULL,
+    issued_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     status ENUM('pending','preparing','served') NOT NULL DEFAULT 'pending',
     FOREIGN KEY (order_id) REFERENCES orders (id),
     FOREIGN KEY (item_id) REFERENCES items (id)

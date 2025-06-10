@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>InOrder - Home</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="/stylesheets/style.css">  
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+    <script src="/javascripts/refresh.js" defer></script>
+    <script src="/javascripts/utils.js" defer type="module"></script>
+    <script src="/javascripts/navigation.js" defer type="module"></script>
+    <script defer>
+        function bumpItemStatus(itemId) {
+            fetch(`api/orders/item/${itemId}/bump`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then((_)=>window.location.reload())
+        }
+    </script>
+    <style>
+        td {
+            padding-bottom: 0.5rem;
+        }
+        th {
+            padding-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="flex items-center flex-row justify-between py-2 px-4 border-b-2 border-b-gray-500">
+        <a class="text-3xl font-thin ubuntu-regular text-center align-middle" href="/home">InOrder</a>
+        <div class="flex flex-row gap-6 justify-center items-center">
+            <h1 class="text-xl ubuntu-bold"><%= user.username %></h1>
+            <button class="sbutton h-12 cursor-pointer" onclick="logoutHandler()">Logout</button>
+        </div>
+    </nav>
+
+    <div id="content-container" class="mt-8 ml-12 flex flex-row flex-wrap gap-8">
+
+
+        <div id="order-meta-container" class="flex flex-col gap-2 max-w-5xl">
+            <div class="ubuntu-bold text-2xl">All Orders</div>
+            <div id="orders-container" class="flex flex-row flex-wrap gap-3 items-center">
+                <% for(let i=0; i<orders.length ; i++) { %>
+                    <a href=<%= `/order/${orders[i].id}` %>  class="order-card">
+                        <div>
+                            <h2 class="text-lg font-bold ubuntu-bold">Order <%= orders[i].id %> ( <span class=<%= `text-${orderColourMap[orders[i].status]}` %> ><%= orders[i].status %></span>  )</h2>
+                            <p class="mt-2 text-gray-500">Created At <%= new Date(orders[i].issued_at).toLocaleString() %></p>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                        </svg>
+                    </a>
+                <% } %>
+            </div>
+            <div id="page-controller">
+                <button onclick="navigatePage(false)"  class="page-controller-button sbutton">
+                    <
+                </button>
+                <div>
+                    Page <span id="page-current"><%= page.current %></span> of <span id="page-total"><%= page.total %></span>
+                </div>
+                <button onclick="navigatePage(true)" class="page-controller-button sbutton">
+                    >
+                </button>
+            </div>
+        </div>
+        
+        <div id="items-meta-container" class="flex flex-col gap-2">
+            <div class="mt-5 ubuntu-bold text-2xl">Item Queue</div>
+
+            <div id="item-queue-container" class="relative overflow-x-auto max-w-fit p-2 bg-white rounded-xl shadow-md border-2" style="max-height: 40rem;">
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="ubuntu-bold px-3 text-left">Item</th>
+                            <th class="ubuntu-bold px-3">Quantity</th>
+                            <th class="ubuntu-bold px-3">Ordered At</th>
+                            <th class="ubuntu-bold px-3">Order</th>
+                            <th class="ubuntu-bold px-3">Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for(let i=0;i<orderedItems.length;i++) { %>
+                            <tr class="ubuntu-regular" class="text-left">
+                                <td class="px-3 ubuntu-bold"><%= itemHM[orderedItems[i].item_id].name  %></td>
+                                <td class="px-3 text-center"><%=  orderedItems[i].quantity %></td>
+                                <td class="px-3"><%= new Date(orderedItems[i].issued_at).toLocaleString()  %></td>
+                                <td class="px-3">Order #<%= orderedItems[i].order_id %></td>
+                                <td class="px-3 text-lg font-bold ubuntu-bold"> <span class=<%= `text-${orderColourMap[orderedItems[i].status]}` %> ><%= orderedItems[i].status %></span> </td>
+                                <td class="px-3"><button class="p-1 rounded-md border-2 shadow ubuntu-bold cursor-pointer" onclick="bumpItemStatus('<%= orderedItems[i].id %>')">Bump Status</button></td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+        
+
+
+    </div>
+
+
+
+    <br></br>
+
+</body>
+</html>

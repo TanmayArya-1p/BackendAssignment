@@ -9,6 +9,16 @@ let router = express.Router();
 router.use(express.json());
 router.use(authMiddleware.authenticationMiddleware());
 
+router.post("/item/:orderitem/bump", authMiddleware.authorizationMiddleware(authUtils.CHEF), async (req, res) => {
+  try {
+    let order = await db.OrderItems.bumpStatus(Number(req.params.orderitem));
+    res.send({"message" : `Bumped Status to ${order.status}`});
+  } catch (err) {
+    console.log(err);
+    res.status(500).send({ message: "Internal Server Error" });
+  }
+});
+
 router.get(
   "/",
   authMiddleware.authorizationMiddleware(authUtils.CHEF),

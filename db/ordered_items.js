@@ -7,8 +7,9 @@ let bumpMap = {
     "preparing" : "served",
 }
 
+// TODO: ORDER BY ISSUED AT 
 export async function getAllOrderedItems() {
-    let items = await db.query("SELECT * FROM order_items ORDER BY issued_at DESC");
+    let items = await db.query("SELECT * FROM order_items");
     return items[0];
 }
 

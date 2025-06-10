@@ -52,24 +52,59 @@ app.get(
     }
 
     let items = null;
-    if (selectedTags.length > 0) {
-      items = await db.Item.getItemsofTag(selectedTags, -1, 0);
-    } else {
-      items = await db.Item.getAllItems(-1, 0);
-    }
+    let page = null;
+    switch (res.locals.user.role) {
+      case "customer":
+        if (selectedTags.length > 0) {
+          items = await db.Item.getItemsofTag(selectedTags, -1, 0);
+        } else {
+          items = await db.Item.getAllItems(-1, 0);
+        }
+        page = paginate(items, req);
+        items = page.filtered;
+        res.render(`customer-home`, {
+          user: res.locals.user,
+          orders: orders,
+          items: items,
+          orderColourMap: orderColourMap,
+          tags: await db.Tags.getAllTags(),
+          selectedTags: selectHM,
+          page: page,
+        });
+        break;
+      case "chef":
+        page = paginate(orders, req);
+        orders = page.filtered;
 
-    let page = paginate(items, req);
-    items = page.filtered;
+        items = await db.Item.getAllItems(-1, 0);
+        let itemHM = {}
+        for (const item of items) {
+          itemHM[item.id] = item;
+        }
 
-    res.render(`${res.locals.user.role}-home`, {
-      user: res.locals.user,
-      orders: orders,
-      items: items,
-      orderColourMap: orderColourMap,
-      tags: await db.Tags.getAllTags(),
-      selectedTags: selectHM,
-      page: page,
-    });
+        let orderedItems = await db.OrderItems.getAllOrderedItems()
+        orderedItems = orderedItems.filter((a) => a.status === "pending" || a.status === "preparing")
+        orderedItems.sort((a, b) => {
+          if (a.status === b.status) return 0;
+          if (a.status === "preparing") return -1;
+          if (b.status === "preparing") return 1;
+          return 0;
+        });
+
+
+        res.render(`chef-home`, {
+          user: res.locals.user,
+          orders: orders,
+          orderedItems: orderedItems,
+          orderColourMap: orderColourMap,
+          page: page,
+          itemHM : itemHM
+        });
+        break;
+      }
+
+
+
   },
 );
 

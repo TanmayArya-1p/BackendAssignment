@@ -11,6 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
     <script src="/javascripts/refresh.js" defer></script>
     <script src="/javascripts/utils.js" defer type="module"></script>
+    <script src="/javascripts/navigation.js" defer type="module"></script>
 
     <script defer>
         let selectedTags = [];
@@ -25,20 +26,6 @@
             selectedTags = [];
         }
 
-
-        function logoutHandler() {
-            fetch('/api/auth/logout', {
-                method: 'POST',
-            })
-            .then(res => {
-                if (res.status === 200) {
-                    window.location.href = '/';
-                } else {
-                    alert('Logout failed');
-                }
-            })
-        }
-
         function toggleTag(tag_name) {
             if(selectedTags.includes(tag_name)) {
                 selectedTags = selectedTags.filter(tag => tag !== tag_name);
@@ -47,18 +34,6 @@
             }
             window.location.href = `/home?tags=${selectedTags.join(',')}`;
         }
-
-        function navigatePage(next=true) {
-            let curr = Number(document.getElementById('page-current').innerText.trim())-1;
-            let total = Number(document.getElementById('page-total').innerText.trim())-1;
-            console.log(curr, total, selectedTags);
-            if(next) {
-                window.location.href = `/home?page=${Math.min(curr+1,total)}&tags=${selectedTags.join(',')}`;
-            } else {
-                window.location.href = `/home?page=${Math.max(curr-1,0)}&tags=${selectedTags.join(',')}`;
-            }
-        }
-
     </script>
 </head>
 <body>
@@ -69,77 +44,88 @@
             <button class="sbutton h-12 cursor-pointer" onclick="logoutHandler()">Logout</button>
         </div>
     </nav>
-    <div class="mt-5 ubuntu-bold text-2xl ml-12">Your Orders</div>
+
     <a class="text-red-500"></a>
     <a class="text-yellow-500"></a>
     <a class="text-teal-500"></a>
     <a class="text-green-500"></a>
 
 
-    <div id="orders-container" class="flex flex-row mt-5 ml-12 flex-wrap gap-3 items-center">
-        <% for(let i=0; i<orders.length ; i++) { %>
-            <a href=<%= `/order/${orders[i].id}` %>  class="order-card">
-                <div>
-                    <h2 class="text-lg font-bold ubuntu-bold">Order <%= orders[i].id %> ( <span class=<%= `text-${orderColourMap[orders[i].status]}` %> ><%= orders[i].status %></span>  )</h2>
-                    <p class="mt-2 text-gray-500">Created At <%= new Date(orders[i].issued_at).toLocaleString() %></p>
-                </div>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-                </svg>
-            </a>
-        <% } %>
-            <a href="/order/create" class="add-order-card">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                </svg>
-                Create Order
-            </a>
-    </div>
-    
-    <div class="mt-5 ubuntu-bold text-2xl ml-12">Items Available</div>
+    <div id="content-container" class="ml-12">
+        <div id="orders-meta-container">
+            <div class="mt-5 ubuntu-bold text-2xl">Your Orders</div>
 
-    <div id="tags-container" class="flex flex-row mt-5 ml-12 gap-2">
-        <div class="ubuntu-regular text-xl">Filters: </div>
-        <% for(const i in selectedTags) { %>
-            <button onclick=<%= `toggleTag("${i}")`  %>  class="tag tag-selector tag-selected"><%= i %></button>
-        <% } %>
-        <% for(let j=0; j<tags.length ; j++) { %>
-            <% if(selectedTags[tags[j].name]) continue; %>
-            <button onclick=<%= `toggleTag("${tags[j].name}")`  %>  class="tag tag-selector"><%= tags[j].name %></button>
-        <% } %>
-    </div>
-
-
-    <div id="" class="flex flex-row flex-wrap mt-5 ml-12 gap-3 items-center w-[80%]">
-        <% for(let i=0; i<items.length ; i++) { %>
-            <div href=<%= `/items/${items[i].id}` %>  class="item-card">
-                <img src="<%= items[i].image %>" style="height: 6rem; width: auto;">
-                <div>
-                    <h2 class="text-lg font-bold ubuntu-bold"><%= items[i].name %></h2>
-                    <p class="mt-2 text-gray-500"><%= items[i].description %></p>
-                    <p class="mt-2 text-gray-800">Price: ₹<%= items[i].price %></p>
-                    <div id="tags" class="flex flex-row flex-wrap gap-2 mt-1">
-                        <% for(let j=0; j<items[i].tags.length ; j++) { %>
-                            <span class="tag"><%= items[i].tags[j][1] %></span>
-                        <% } %>
-                    </div>
-
-                </div>
+            <div id="orders-container" class="flex flex-row mt-5 flex-wrap gap-3 items-center">
+                <% for(let i=0; i<orders.length ; i++) { %>
+                    <a href=<%= `/order/${orders[i].id}` %>  class="order-card">
+                        <div>
+                            <h2 class="text-lg font-bold ubuntu-bold">Order <%= orders[i].id %> ( <span class=<%= `text-${orderColourMap[orders[i].status]}` %> ><%= orders[i].status %></span>  )</h2>
+                            <p class="mt-2 text-gray-500">Created At <%= new Date(orders[i].issued_at).toLocaleString() %></p>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                        </svg>
+                    </a>
+                <% } %>
+                    <a href="/order/create" class="add-order-card">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                        </svg>
+                        Create Order
+                    </a>
             </div>
-        <% } %>
-    </div>
-
-    <div id="page-controller" class="ml-12">
-        <button onclick="navigatePage(false)"  class="page-controller-button sbutton">
-            <
-        </button>
-        <div>
-            Page <span id="page-current"><%= page.current %></span> of <span id="page-total"><%= page.total %></span>
         </div>
-        <button onclick="navigatePage(true)" class="page-controller-button sbutton">
-            >
-        </button>
-    </div>
+        
+        <div id="items-meta-container">
+            <div class="mt-5 ubuntu-bold text-2xl ">Items Available</div>
+
+            <div id="tags-container" class="flex flex-row mt-5  gap-2">
+                <div class="ubuntu-regular text-xl">Filters: </div>
+                <% for(const i in selectedTags) { %>
+                    <button onclick=<%= `toggleTag("${i}")`  %>  class="tag tag-selector tag-selected"><%= i %></button>
+                <% } %>
+                <% for(let j=0; j<tags.length ; j++) { %>
+                    <% if(selectedTags[tags[j].name]) continue; %>
+                    <button onclick=<%= `toggleTag("${tags[j].name}")`  %>  class="tag tag-selector"><%= tags[j].name %></button>
+                <% } %>
+            </div>
+
+
+            <div id="" class="flex flex-row flex-wrap mt-5  gap-3 items-center w-[80%]">
+                <% for(let i=0; i<items.length ; i++) { %>
+                    <div href=<%= `/items/${items[i].id}` %>  class="item-card">
+                        <img src="<%= items[i].image %>" style="height: 6rem; width: auto;">
+                        <div>
+                            <h2 class="text-lg font-bold ubuntu-bold"><%= items[i].name %></h2>
+                            <p class="mt-2 text-gray-500"><%= items[i].description %></p>
+                            <p class="mt-2 text-gray-800">Price: ₹<%= items[i].price %></p>
+                            <div id="tags" class="flex flex-row flex-wrap gap-2 mt-1">
+                                <% for(let j=0; j<items[i].tags.length ; j++) { %>
+                                    <span class="tag"><%= items[i].tags[j][1] %></span>
+                                <% } %>
+                            </div>
+
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+
+            <div id="page-controller" class="">
+                <button onclick="navigatePage(false)"  class="page-controller-button sbutton">
+                    <
+                </button>
+                <div>
+                    Page <span id="page-current"><%= page.current %></span> of <span id="page-total"><%= page.total %></span>
+                </div>
+                <button onclick="navigatePage(true)" class="page-controller-button sbutton">
+                    >
+                </button>
+            </div>       
+        </div>
+        
+
+
+
     <br></br>
 
 </body>
