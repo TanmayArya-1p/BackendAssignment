@@ -29,7 +29,8 @@ export async function bumpStatus(id) {
 
 export async function evaluateOrderStatus(id) {
     let order = await Order.getOrderById(id)
-    let minStatus = order.ordered_items.reduce((acc,curr) => acc<curr.status?acc: curr.status, "pending");
+    if(order.status === "billed" || order.status === "paid") return
+    let minStatus = order.ordered_items.reduce((acc,curr) => acc<curr.status?acc: curr.status, "served");
     if(order.status !==minStatus) {
         await Order.updateOrder(id,minStatus)
     }

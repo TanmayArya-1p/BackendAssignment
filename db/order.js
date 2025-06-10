@@ -135,13 +135,14 @@ export default class Order {
 
   async orderItem(item_id, quantity, instructions = null) {
     await this.hydrate();
-    if (this.status == "billed") throw new Error("Order is already billed");
+    if (this.status == "billed" || this.status === "paid") throw new Error("Order is already billed");
     let it = await Item.getItemById(item_id);
     let price = it.price * quantity;
     await db.query(
       "INSERT INTO order_items (order_id, item_id, quantity, price,instructions) VALUES (?, ?, ?, ?,?)",
       [this.id, item_id, quantity, price, instructions],
     );
+    await Order.updateOrder(this.id,"pending")
     return {
       item: it,
       quantity: quantity,

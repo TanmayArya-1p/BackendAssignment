@@ -186,7 +186,7 @@ router.get("/:orderid/bill", async (req, res) => {
   }
 });
 
-router.post("/:orderid/bill/pay", async (req, res) => {
+router.post("/:orderid/bill/pay",authMiddleware.authorizationMiddleware(authUtils.CHEF) ,async (req, res) => {
   try {
     let order = await db.Order.getOrderById(Number(req.params.orderid));
     if (order.status != "billed") throw new Error("Order not billed");
