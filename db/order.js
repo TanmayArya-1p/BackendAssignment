@@ -168,9 +168,8 @@ export default class Order {
       throw new Error("Order is not billed yet");
     }
     await db.query(
-      "UPDATE orders SET status= ?,payer = ?, tip = ?, paid_at = NOW() WHERE id = ?",
+      "UPDATE orders SET status= ?,waiter = ?, tip = ?, paid_at = NOW() WHERE id = ?",
       ["paid", waiter_id, tip, this.id],
     );
-    //TODO : CHANGE PAYER TO WAITER AFTER SCHEMA RESET
   }
 }

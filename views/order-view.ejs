@@ -53,7 +53,7 @@
         </div>
 
     </nav>
-
+    <div class="hidden"></div>
     <div id="page-container" class="mt-8 ml-4 mb-30">
 
         <div class="ubuntu-bold text-3xl">Order #<%= order.id %>  ( <span class=<%= `text-${orderColourMap[order.status]}` %> ><%= order.status %></span>  ) </div>
@@ -125,7 +125,7 @@
                 </tbody>
             </table>
         </div>
-
+        
         <div id="item-add-container" class="<%= order.status === "billed" || order.status === "paid"  ? "hidden" : "" %>">
             <div class="ubuntu-bold text-3xl mt-12">Add more Items</div>
 

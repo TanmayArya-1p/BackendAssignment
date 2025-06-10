@@ -1,7 +1,5 @@
 import mysql from "mysql2";
 
-// TODO: MAKE A DOCKERCOMPOSE WITH MYSQL AS OTHER SERVICE
-
 const conn = mysql
   .createConnection({
     host: process.env.MYSQL_HOST,
