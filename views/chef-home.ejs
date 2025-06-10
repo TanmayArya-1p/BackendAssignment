@@ -93,9 +93,9 @@
                                 <td class="px-3 ubuntu-bold"><%= itemHM[orderedItems[i].item_id].name  %></td>
                                 <td class="px-3 text-center"><%=  orderedItems[i].quantity %></td>
                                 <td class="px-3"><%= new Date(orderedItems[i].issued_at).toLocaleString()  %></td>
-                                <td class="px-3">Order #<%= orderedItems[i].order_id %></td>
+                                <td class="px-3"><a class="smoll-button" href="/order/<%= orderedItems[i].order_id %>">Order #<%= orderedItems[i].order_id %></a></td>
                                 <td class="px-3 text-lg font-bold ubuntu-bold"> <span class=<%= `text-${orderColourMap[orderedItems[i].status]}` %> ><%= orderedItems[i].status %></span> </td>
-                                <td class="px-3"><button class="p-1 rounded-md border-2 shadow ubuntu-bold cursor-pointer" onclick="bumpItemStatus('<%= orderedItems[i].id %>')">Bump Status</button></td>
+                                <td class="px-3"><button class="smoll-button" onclick="bumpItemStatus('<%= orderedItems[i].id %>')">Bump Status</button></td>
                             </tr>
                         <% } %>
                     </tbody>

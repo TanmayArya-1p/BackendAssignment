@@ -177,3 +177,23 @@ nav {
   flex-direction: row;
   gap: 1rem;
 }
+
+.smoll-button {
+  background-color: white;
+  border-width: 2px;
+  box-shadow: white;
+  border-radius: 0.25rem;
+  padding-inline: 1rem;
+  padding-block: 0.1rem;
+  transition: transform 0.1s linear;
+  font-family: "Ubuntu", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+
+
+.smoll-button:hover {
+  transform: translateY(-0.1rem);
+  transition: transform 0.1s linear;
+}
