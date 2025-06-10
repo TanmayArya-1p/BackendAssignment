@@ -28,7 +28,6 @@ router.get("/:userid", async (req, res) => {
   }
 });
 
-// TODO: fix ui CUSTOMER HOME AND CHEF HOME
 
 router.post("/", async (req, res) => {
   let username = req.body.username;

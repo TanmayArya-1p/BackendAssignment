@@ -33,11 +33,11 @@ CREATE TABLE IF NOT EXISTS orders (
     ) NOT NULL DEFAULT 'pending',
     billable_amount FLOAT,
     table_no INT,
-    payer INT NULL,
+    waiter INT NULL,
     paid_at TIMESTAMP NULL,
     tip FLOAT NULL,
     FOREIGN KEY (issued_by) REFERENCES users (id),
-    FOREIGN KEY (payer) REFERENCES users (id)
+    FOREIGN KEY (waiter) REFERENCES users (id)
 );
 
 CREATE TABLE IF NOT EXISTS order_items (

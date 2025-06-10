@@ -162,14 +162,15 @@ export default class Order {
     return orders[0].map((order) => new Order(order));
   }
 
-  async payBill(payer_id, tip) {
+  async payBill(waiter_id, tip) {
     await this.hydrate();
     if (this.status != "billed") {
       throw new Error("Order is not billed yet");
     }
     await db.query(
       "UPDATE orders SET status= ?,payer = ?, tip = ?, paid_at = NOW() WHERE id = ?",
-      ["paid", payer_id, tip, this.id],
+      ["paid", waiter_id, tip, this.id],
     );
+    //TODO : CHANGE PAYER TO WAITER AFTER SCHEMA RESET
   }
 }

@@ -69,6 +69,37 @@
                     >
                 </button>
             </div>
+
+            <% let unorders = orders.filter((a)=>a.status==="billed") %>
+            <% if(unorders.length !== 0)  { %>
+                <div id="unpaid-bills-meta-container" class="flex flex-col gap-2">
+                    <div class="mt-5 ubuntu-bold text-2xl">Unpaid Bills</div>
+
+                    <div id="unpaid-bills-container" class="relative overflow-x-auto max-w-fit p-2 bg-white rounded-xl shadow-md border-2" style="max-height: 40rem;">
+
+                        <table>
+                            <thead>
+                                <tr class="text-center">
+                                    <th class="ubuntu-bold px-3 text-left">Order</th>
+                                    <th class="ubuntu-bold px-3">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <% for(let i=0;i<unorders.length;i++) { %>
+                                    <tr class="ubuntu-regular" class="text-left">
+                                        <td class="px-3"><a class="smoll-button" href="/order/<%= unorders[i].id %>">Order #<%= unorders[i].id %></a></td>
+                                        <td class="px-3 text-lg font-bold ubuntu-bold">₹ <%= unorders[i].billable_amount %></td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            <% } %>
+
+
         </div>
         
         <div id="items-meta-container" class="flex flex-col gap-2">
@@ -104,7 +135,6 @@
 
         </div>
 
-        
 
 
     </div>

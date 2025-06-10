@@ -22,6 +22,25 @@
             })
             window.location.reload()
         }
+
+        async function payHandler(orderid) {
+            let amt = prompt("Enter the amount paid by issuer of order:");
+            amt = Number(amt);
+            if(isNaN(amt) || amt <= 0) {
+                alert("Invalid amount entered. Please enter a valid amount.");
+                return;
+            }
+            await fetch(`/api/orders/${orderid}/bill/pay`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    amount: amt
+                })
+            })
+            window.location.reload()
+        }
     </script>
 
 </head>
@@ -98,6 +117,8 @@
                         <td> 
                             <% if(order.status!=="billed" && order.status!=="paid") { %>
                                 <button class="smoll-button mx-2" onclick="billHandler('<%= order.id %>')">Bill Order</button>
+                            <% } else if(order.status==="billed" && (user.role==="chef" || user.role==="admin")) { %>
+                                <button class="smoll-button mx-2" onclick="payHandler('<%= order.id %>')">Mark as Paid</button>
                             <% } %>
                         </td>
                     </tr>
