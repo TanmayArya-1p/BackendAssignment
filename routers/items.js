@@ -13,6 +13,34 @@ router.use(fileUpload());
 
 /**
  * @openapi
+ * /api/items/tags:
+ *   get:
+ *     summary: Get all existing item tags
+ *     security:
+ *        - AuthHeader: []
+ *     tags:
+ *      - Items
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *          application/json:
+ *            schema:
+ *              type: array
+ *              items:
+ *                type: string
+ */
+router.get(
+  "/tags",
+  authMiddleware.authenticationMiddleware(),
+  authMiddleware.authorizationMiddleware(authUtils.CUSTOMER),
+  async (req, res) => {
+    res.send(await db.Tags.getAllTags());
+  },
+);
+
+/**
+ * @openapi
  * /api/items:
  *   get:
  *     summary: Get items
@@ -208,7 +236,7 @@ router.delete(
  *               price:
  *                 type: number
  *                 required: false
- *               updtags:
+ *               tags:
  *                 type: array
  *                 required: false
  *                 items:
@@ -277,34 +305,6 @@ router.post(
     image.mv(path.join(process.cwd(), "/public/images", image.name));
 
     res.status(200).send({ message: "File uploaded successfully" });
-  },
-);
-
-/**
- * @openapi
- * /api/items/tags:
- *   get:
- *     summary: Get all existing item tags
- *     security:
- *        - AuthHeader: []
- *     tags:
- *      - Items
- *     responses:
- *       200:
- *         description: Success
- *         content:
- *          application/json:
- *            schema:
- *              type: array
- *              items:
- *                type: string
- */
-router.get(
-  "/tags",
-  authMiddleware.authenticationMiddleware(),
-  authMiddleware.authorizationMiddleware(authUtils.CUSTOMER),
-  async (req, res) => {
-    res.send(await db.Tags.getAllTags());
   },
 );
 

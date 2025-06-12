@@ -91,7 +91,10 @@ export default class Item {
 
     if (updtags.length != 1 || updtags[0] !== "NOAC") {
       let prevItem = this;
-      let diffs = new utils.DiffGenerator(prevItem.tags, updtags).calculate();
+      let diffs = new utils.DiffGenerator(
+        prevItem.tags.map((a) => a[1]),
+        updtags,
+      ).calculate();
       console.log(diffs, updtags);
       for (const newTag of diffs.added) {
         let tstat = await tags.giveItemTagByName(this.id, newTag);
