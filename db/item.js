@@ -95,7 +95,6 @@ export default class Item {
         prevItem.tags.map((a) => a[1]),
         updtags,
       ).calculate();
-      console.log(diffs, updtags);
       for (const newTag of diffs.added) {
         let tstat = await tags.giveItemTagByName(this.id, newTag);
         if (!tstat) {
@@ -153,10 +152,6 @@ export default class Item {
 
   static async getItemsofTag(tag_names = []) {
     let inPl = tag_names.map((_) => `?`).join(",");
-    console.log(
-      "QUERY STRING",
-      `SELECT DISTINCT  items.id,items.name,items.description,items.price,items.image FROM items INNER JOIN tag_rel ON items.id=tag_rel.item_id LEFT JOIN tags ON tags.id=tag_rel.tag_id WHERE tags.name IN (${inPl})`,
-    );
     let items = await db.query(
       `SELECT DISTINCT  items.id,items.name,items.description,items.price,items.image FROM items INNER JOIN tag_rel ON items.id=tag_rel.item_id LEFT JOIN tags ON tags.id=tag_rel.tag_id WHERE tags.name IN (${inPl})`,
       tag_names,

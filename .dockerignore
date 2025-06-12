@@ -1,2 +1,7 @@
 node_modules
 .git
+.vscode
+yaak
+openapi.json
+README.md
+yaak.json

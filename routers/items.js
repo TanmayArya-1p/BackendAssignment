@@ -110,7 +110,6 @@ router.get(
       let item = await db.Item.getItemById(Number(req.params.itemid));
       res.send(item);
     } catch (err) {
-      console.log(err);
       res.status(500).send({ message: "Internal Server Error" });
     }
   },

@@ -180,12 +180,9 @@ router.get("/:orderid", async (req, res) => {
       order.issued_by !== res.locals.user.id
     ) {
       return res.status(401).send({ message: "Unauthorized" });
-    } else {
-      console.log("PASSESCHECKED", res.locals.user);
     }
     res.send(order);
   } catch (err) {
-    console.log(err);
     res.status(500).send({ message: "Internal Server Error" });
   }
 });
@@ -216,7 +213,6 @@ router.delete(
       await order.delete();
       res.send(order);
     } catch (err) {
-      console.log(err);
       res.status(500).send({ message: "Internal Server Error" });
     }
   },
@@ -273,7 +269,6 @@ router.put(
       );
       res.send(order);
     } catch (err) {
-      console.log(err);
       res.status(500).send({ message: "Internal Server Error" });
     }
   },
@@ -309,7 +304,6 @@ router.get("/:orderid/items", async (req, res) => {
     let items = await order.getOrderedItems();
     res.send(items);
   } catch (err) {
-    console.log(err);
     res.status(500).send({ message: "Internal Server Error" });
   }
 });
@@ -367,7 +361,6 @@ router.post("/:orderid/items", async (req, res) => {
     let item = await order.orderItem(item_id, quantity, instructions);
     res.send(item);
   } catch (err) {
-    console.log(err);
     res.status(500).send({ message: "Internal Server Error" });
   }
 });
@@ -415,7 +408,6 @@ router.get("/:orderid/bill", async (req, res) => {
       order_status: order.status,
     });
   } catch (err) {
-    console.log(err);
     res.status(500).send({ message: "Internal Server Error" });
   }
 });
@@ -470,7 +462,6 @@ router.post(
       await order.hydrate();
       res.send({ message: "Bill paid successfully", order: order });
     } catch (err) {
-      console.log(err);
       res.status(500).send({ message: "Internal Server Error" });
     }
   },
