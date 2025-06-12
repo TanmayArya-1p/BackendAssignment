@@ -3,6 +3,7 @@
 function navigatePage(next=true) {
     let curr = Number(document.getElementById('page-current').innerText.trim())-1;
     let total = Number(document.getElementById('page-total').innerText.trim())-1;
+    if(curr===-1 && total===-1) return;
     const url = new URL(window.location.href);
 
     if(next) {
