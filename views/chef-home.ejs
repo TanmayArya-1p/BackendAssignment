@@ -33,7 +33,7 @@
 </head>
 <body>
     <nav class="flex items-center flex-row justify-between py-2 px-4 border-b-2 border-b-gray-500">
-        <a class="text-3xl font-thin ubuntu-regular text-center align-middle" href="/home">InOrder</a>
+        <a class="text-3xl font-thin ubuntu-regular text-center align-middle" href="/home">InOrder <span class="ubuntu-thin text-xl"><%= user.role === "admin" ? "admin" : (user.role==="chef" ? "chef" : "") %></span></a>
         <div class="flex flex-row gap-6 justify-center items-center">
             <h1 class="text-xl ubuntu-bold"><%= user.username %></h1>
             <button class="sbutton h-12 cursor-pointer" onclick="logoutHandler()">Logout</button>

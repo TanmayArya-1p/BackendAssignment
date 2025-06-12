@@ -101,7 +101,25 @@ app.get(
           itemHM : itemHM
         });
         break;
+    
+      case "admin":
+        page = paginate(orders, req);
+        orders = page.filtered;
+
+        items = await db.Item.getAllItems(-1, 0);
+
+        res.render(`admin-home`, {
+          user: res.locals.user,
+          orders: orders,
+          orderColourMap: orderColourMap,
+          page: page,
+          items: items,
+        });
+        break;
+
+        
       }
+  
 
 
 
