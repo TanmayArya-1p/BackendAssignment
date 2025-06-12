@@ -216,5 +216,5 @@ router.put("/:userid", async (req, res) => {
   }
 });
 
-// TODO: REMOVE ERRORS FROM CONSOLE LOGS
 export default router;
+

@@ -143,7 +143,6 @@ router.post(
   authMiddleware.authenticationMiddleware(true),
   async (req, res) => {
     let refreshToken = authUtils.extractRefreshToken(req);
-    console.log("GOT REFRESH TOKEN", refreshToken);
     if (!refreshToken) return authUtils.UnauthorizedResponse(res);
     await jwt.verifyRefreshToken(refreshToken, res.locals.user, true);
     await db.Jti.cleanupJti();

@@ -20,5 +20,3 @@ function paginate(arr, req) {
 }
 
 export { orderColourMap, paginate };
-
-//TODO: TEST AND FIX REFRESH TOKEN
