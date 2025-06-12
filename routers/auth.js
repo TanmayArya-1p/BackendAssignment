@@ -8,6 +8,28 @@ let router = express.Router();
 
 router.use(express.json());
 
+/**
+ * @openapi
+ * /api/auth/register:
+ *   post:
+ *     summary: Register a new user
+ *     security:
+ *     tags:
+ *       - Auth
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Success
+ */
 router.post("/register", async (req, res) => {
   let username = req.body.username;
   let password = req.body.password;
@@ -28,6 +50,39 @@ router.post("/register", async (req, res) => {
   }
 });
 
+/**
+ * @openapi
+ * /api/auth/login:
+ *   post:
+ *     summary: Register a new user
+ *     security:
+ *     tags:
+ *       - Auth
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 authToken:
+ *                   type: string
+ *                 refreshToken:
+ *                   type: string
+ */
 router.post("/login", async (req, res) => {
   var username = req.body.username;
   var password = req.body.password;
@@ -56,7 +111,11 @@ router.post("/login", async (req, res) => {
         path: "/api/auth",
         sameSite: "strict",
       });
-      res.send({ message: "Logged In Successfully" , authToken: authToken, refreshToken: refreshToken });
+      res.send({
+        message: "Logged In Successfully",
+        authToken: authToken,
+        refreshToken: refreshToken,
+      });
     } else {
       res.status(401).send({ message: "Invalid username or password." });
     }
@@ -65,6 +124,20 @@ router.post("/login", async (req, res) => {
   }
 });
 
+/**
+ * @openapi
+ * /api/auth/logout:
+ *   post:
+ *     summary: Invalidate user refresh token and logout
+ *     security:
+ *        - AuthHeader: []
+ *        - RefreshHeader: []
+ *     tags:
+ *       - Auth
+ *     responses:
+ *       200:
+ *         description: Success
+ */
 router.post(
   "/logout",
   authMiddleware.authenticationMiddleware(true),
@@ -74,24 +147,59 @@ router.post(
     if (!refreshToken) return authUtils.UnauthorizedResponse(res);
     await jwt.verifyRefreshToken(refreshToken, res.locals.user, true);
     await db.Jti.cleanupJti();
-    res.clearCookie('authToken');
-    res.clearCookie('refreshToken');
+    res.clearCookie("authToken");
+    res.clearCookie("refreshToken");
     res.send({ message: "Logged Out Successfully" });
   },
 );
 
-router.get("/refresh", authMiddleware.authenticationMiddleware(true), async (req, res) => {
-  res.send({
-    message: "Refreshed"
-  });
-})
+/**
+ * @openapi
+ * /api/auth/refresh:
+ *   post:
+ *     summary: Refresh auth token.
+ *     description: The new auth and refresh tokens are returned in the Set-Cookie response header.
+ *     security:
+ *        - AuthHeader: []
+ *        - RefreshHeader: []
+ *     tags:
+ *       - Auth
+ *     responses:
+ *       200:
+ *         description: Success
+ */
+router.get(
+  "/refresh",
+  authMiddleware.authenticationMiddleware(true),
+  async (req, res) => {
+    res.send({
+      message: "Refreshed",
+    });
+  },
+);
 
-
-router.get("/verify" , authMiddleware.authenticationMiddleware(true), async (req, res) => {
-  res.send({
-    message: "Verified",
-  });
-});
-
+/**
+ * @openapi
+ * /api/auth/verify:
+ *   post:
+ *     summary: Validate user's session and if expired then re-issue auth and refresh token
+ *     security:
+ *        - AuthHeader: []
+ *        - RefreshHeader: []
+ *     tags:
+ *       - Auth
+ *     responses:
+ *       200:
+ *         description: Success
+ */
+router.get(
+  "/verify",
+  authMiddleware.authenticationMiddleware(true),
+  async (req, res) => {
+    res.send({
+      message: "Verified",
+    });
+  },
+);
 
 export default router;

@@ -8,7 +8,7 @@
     "test": "node --env-file=.env tests.js",
     "start": "nodemon --env-file=.env ./bin/www",
     "debug": "DEBUG=mvcassignment:* npm start",
-    "prod" : "node --env-file=.env ./bin/www"
+    "prod": "node --env-file=.env ./bin/www"
   },
   "author": "",
   "license": "ISC",
@@ -27,6 +27,8 @@
     "jsonwebtoken": "^9.0.2",
     "morgan": "~1.9.1",
     "mysql2": "^3.14.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
     "ws": "^8.18.2"
   },
   "devDependencies": {

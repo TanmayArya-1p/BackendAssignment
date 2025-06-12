@@ -3,6 +3,7 @@ import cookieParser from "cookie-parser";
 import authRouter from "./routers/auth.js";
 import itemsRouter from "./routers/items.js";
 import usersRouter from "./routers/users.js";
+import swaggerRouter from "./routers/swagger.js";
 import ordersRouter from "./routers/orders.js";
 import logger from "morgan";
 import path from "path";
@@ -77,13 +78,15 @@ app.get(
         orders = page.filtered;
 
         items = await db.Item.getAllItems(-1, 0);
-        let itemHM = {}
+        let itemHM = {};
         for (const item of items) {
           itemHM[item.id] = item;
         }
 
-        let orderedItems = await db.OrderItems.getAllOrderedItems()
-        orderedItems = orderedItems.filter((a) => a.status === "pending" || a.status === "preparing")
+        let orderedItems = await db.OrderItems.getAllOrderedItems();
+        orderedItems = orderedItems.filter(
+          (a) => a.status === "pending" || a.status === "preparing",
+        );
         orderedItems.sort((a, b) => {
           if (a.status === b.status) return 0;
           if (a.status === "preparing") return -1;
@@ -91,17 +94,16 @@ app.get(
           return 0;
         });
 
-
         res.render(`chef-home`, {
           user: res.locals.user,
           orders: orders,
           orderedItems: orderedItems,
           orderColourMap: orderColourMap,
           page: page,
-          itemHM : itemHM
+          itemHM: itemHM,
         });
         break;
-    
+
       case "admin":
         page = paginate(orders, req);
         orders = page.filtered;
@@ -116,13 +118,7 @@ app.get(
           items: items,
         });
         break;
-
-        
-      }
-  
-
-
-
+    }
   },
 );
 
@@ -169,6 +165,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/items", itemsRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/orders", ordersRouter);
+app.use("/api/swagger", swaggerRouter);
 
 app.use(function (req, res, next) {
   res.status(404).send("404 Not Found");

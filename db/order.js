@@ -139,7 +139,7 @@ export default class Order {
     let it = await Item.getItemById(item_id);
     let price = it.price * quantity;
     await db.query(
-      "INSERT INTO order_items (order_id, item_id, quantity, price,instructions) VALUES (?, ?, ?, ?,?)",
+      "INSERT INTO order_items (order_id, item_id, quantity, price,instructions) VALUES (?, ?, ?, ?, ?)",
       [this.id, item_id, quantity, price, instructions],
     );
     await Order.updateOrder(this.id,"pending")
