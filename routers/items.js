@@ -49,12 +49,14 @@ router.post(
   async (req, res) => {
     if (!req.body.tags) req.body.tags = [];
     try {
-      let item = new db.Item({
+      let itemobj = {
         name: req.body.name,
         description: req.body.description,
         price: Number(req.body.price),
         tags: req.body.tags,
-      });
+      };
+      if (req.body.image) itemobj.image = req.body.image;
+      let item = new db.Item(itemobj);
       item = await item.create();
       res.send(item);
     } catch (err) {
@@ -93,6 +95,7 @@ router.put(
           description: req.body.description,
           price: Number(req.body.price),
           updtags: req.body.tags,
+          image: req.body.image,
         }),
       );
     } catch (err) {
@@ -101,18 +104,18 @@ router.put(
   },
 );
 
-
-router.post('/upload',   
+router.post(
+  "/upload",
   authMiddleware.authenticationMiddleware(),
   authMiddleware.authorizationMiddleware(authUtils.CHEF),
   (req, res) => {
-  const { image } = req.files;
-  if (!image) return res.sendStatus(400);
-  image.mv(path.join(process.cwd(), '/public/images', image.name));
+    const { image } = req.files;
+    if (!image) return res.sendStatus(400);
+    image.mv(path.join(process.cwd(), "/public/images", image.name));
 
-  res.status(200).send({ message: "File uploaded successfully" });
-});
-
+    res.status(200).send({ message: "File uploaded successfully" });
+  },
+);
 
 router.get(
   "/tags",

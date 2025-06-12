@@ -7,7 +7,13 @@ export default class Item {
     this.hydrated = false;
     if (typeof p === "object") {
       Object.assign(this, p);
-      if (this.id && this.name && this.description != undefined && this.price && this.image)
+      if (
+        this.id &&
+        this.name &&
+        this.description != undefined &&
+        this.price &&
+        this.image
+      )
         this.hydrated = true;
     } else if (typeof p === "number") {
       this.id = p;
@@ -17,7 +23,13 @@ export default class Item {
   }
 
   isHydrated() {
-    if (this.id && this.name && this.description != undefined && this.price && this.image)
+    if (
+      this.id &&
+      this.name &&
+      this.description != undefined &&
+      this.price &&
+      this.image
+    )
       this.hydrated = true;
     return this.hydrated;
   }
@@ -33,10 +45,10 @@ export default class Item {
       throw new Error("Not all required parameters are provided");
 
     let newID = null;
-    if(this.image)
+    if (this.image)
       newID = await db.query(
         "INSERT INTO items (name, description, price, image) VALUES (?, ?, ?, ?)",
-        [this.name, this.description, this.price ,this.image],
+        [this.name, this.description, this.price, this.image],
       );
     else
       newID = await db.query(
@@ -54,7 +66,7 @@ export default class Item {
         }
       }
     }
-    this.image = item.image
+    this.image = item.image;
     this.hydrated = true;
     return this;
   }
@@ -75,16 +87,16 @@ export default class Item {
     if (!name) name = this.name;
     if (!description) description = this.description;
     if (!price) price = this.price;
-    if(!image) image = this.image;
+    if (!image) image = this.image;
 
     if (updtags.length != 1 || updtags[0] !== "NOAC") {
       let prevItem = this;
       let diffs = new utils.DiffGenerator(prevItem.tags, updtags).calculate();
-      console.log(diffs,updtags)
+      console.log(diffs, updtags);
       for (const newTag of diffs.added) {
         let tstat = await tags.giveItemTagByName(this.id, newTag);
-        if(!tstat) {
-          await tags.createTag(newTag)
+        if (!tstat) {
+          await tags.createTag(newTag);
           await tags.giveItemTagByName(this.id, newTag);
         }
       }
@@ -96,7 +108,7 @@ export default class Item {
 
     await db.query(
       "UPDATE items SET name = ?, description = ?, price = ?, image = ? WHERE id = ?",
-      [name, description, price,image, this.id],
+      [name, description, price, image, this.id],
     );
     this.name = name;
     this.description = description;
@@ -136,18 +148,21 @@ export default class Item {
     return res;
   }
 
-
-  static async getItemsofTag(tag_names=[]) {
-
-    let inPl= tag_names.map((_) => `?`).join(",");
-    console.log("QUERY STRING" ,`SELECT DISTINCT  items.id,items.name,items.description,items.price,items.image FROM items INNER JOIN tag_rel ON items.id=tag_rel.item_id LEFT JOIN tags ON tags.id=tag_rel.tag_id WHERE tags.name IN (${inPl})` )
+  static async getItemsofTag(tag_names = []) {
+    let inPl = tag_names.map((_) => `?`).join(",");
+    console.log(
+      "QUERY STRING",
+      `SELECT DISTINCT  items.id,items.name,items.description,items.price,items.image FROM items INNER JOIN tag_rel ON items.id=tag_rel.item_id LEFT JOIN tags ON tags.id=tag_rel.tag_id WHERE tags.name IN (${inPl})`,
+    );
     let items = await db.query(
-      `SELECT DISTINCT  items.id,items.name,items.description,items.price,items.image FROM items INNER JOIN tag_rel ON items.id=tag_rel.item_id LEFT JOIN tags ON tags.id=tag_rel.tag_id WHERE tags.name IN (${inPl})`  ,tag_names
+      `SELECT DISTINCT  items.id,items.name,items.description,items.price,items.image FROM items INNER JOIN tag_rel ON items.id=tag_rel.item_id LEFT JOIN tags ON tags.id=tag_rel.tag_id WHERE tags.name IN (${inPl})`,
+      tag_names,
     );
     if (!items[0]) return [];
-    return await Promise.all(items[0].map(async (a) => await Item.getItemById(a.id)));
+    return await Promise.all(
+      items[0].map(async (a) => await Item.getItemById(a.id)),
+    );
   }
 }
-
 
 //TODO : OPENAPI SPEC WITH SWAGGER DOCS FOR CONTROLLER
