@@ -156,7 +156,7 @@ router.post(
 /**
  * @openapi
  * /api/auth/refresh:
- *   post:
+ *   get:
  *     summary: Refresh auth token.
  *     description: The new auth and refresh tokens are returned in the Set-Cookie response header.
  *     security:
@@ -181,7 +181,7 @@ router.get(
 /**
  * @openapi
  * /api/auth/verify:
- *   post:
+ *   get:
  *     summary: Validate user's session and if expired then re-issue auth and refresh token
  *     security:
  *        - AuthHeader: []

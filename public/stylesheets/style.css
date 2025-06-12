@@ -195,6 +195,9 @@
   }
 }
 @layer utilities {
+  .collapse {
+    visibility: collapse;
+  }
   .relative {
     position: relative;
   }

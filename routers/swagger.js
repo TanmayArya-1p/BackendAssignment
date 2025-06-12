@@ -40,6 +40,11 @@ const swaggerSpec = swaggerJSDoc(swaggerOptions);
 const router = express.Router();
 
 router.use("/", swaggerUi.serve);
-router.get("/", swaggerUi.setup(swaggerSpec));
+router.get(
+  "/",
+  swaggerUi.setup(swaggerSpec, false, {
+    docExpansion: "none",
+  }),
+);
 
 export default router;
