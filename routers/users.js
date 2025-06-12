@@ -1,6 +1,5 @@
 import express from "express";
 import db from "../db/index.js";
-import * as jwt from "../utils/jwt.js";
 import * as authUtils from "../utils/auth.js";
 import * as authMiddleware from "../middleware/auth.js";
 
@@ -10,6 +9,30 @@ router.use(express.json());
 router.use(authMiddleware.authenticationMiddleware());
 router.use(authMiddleware.authorizationMiddleware(authUtils.ADMIN));
 
+/**
+ * @openapi
+ * /api/users:
+ *  get:
+ *   summary: Get all users
+ *   description: Must be ADMIN
+ *   tags:
+ *     - Users
+ *   security:
+ *     - AuthHeader: []
+ *   parameters:
+ *      - name: limit
+ *        description: Max no of orders to retrieve
+ *        in: query
+ *        required: false
+ *      - name: offset
+ *        description: Offset from the start to fetch orders
+ *        in: query
+ *        required: false
+ *   responses:
+ *      200:
+ *        description: Success
+ *
+ */
 router.get("/", async (req, res) => {
   let limit = Number(req.query.limit);
   let offset = Number(req.query.offset);
@@ -20,6 +43,27 @@ router.get("/", async (req, res) => {
   res.send(await db.User.getAllUsers(limit, offset));
 });
 
+/**
+ * @openapi
+ * /api/users/{userid}:
+ *  get:
+ *   summary: Get specific user by id
+ *   description: Must be ADMIN
+ *   tags:
+ *     - Users
+ *   security:
+ *     - AuthHeader: []
+ *   parameters:
+ *      - name: userid
+ *        description: ID of user
+ *        in: path
+ *        required: true
+ *        type: number
+ *   responses:
+ *      200:
+ *        description: Success
+ *
+ */
 router.get("/:userid", async (req, res) => {
   try {
     res.send(await db.User.getUserById(req.params.userid));
@@ -28,7 +72,38 @@ router.get("/:userid", async (req, res) => {
   }
 });
 
-
+/**
+ * @openapi
+ * /api/users:
+ *  post:
+ *   summary: Create user
+ *   description: Must be ADMIN
+ *   tags:
+ *     - Users
+ *   security:
+ *     - AuthHeader: []
+ *   requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              username:
+ *                type: string
+ *                required: true
+ *              password:
+ *                type: string
+ *                required: true
+ *              role:
+ *                type: string
+ *                required: true
+ *                enum: ["customer","admin","chef"]
+ *   responses:
+ *      200:
+ *        description: Success
+ *
+ */
 router.post("/", async (req, res) => {
   let username = req.body.username;
   let password = req.body.password;
@@ -53,6 +128,27 @@ router.post("/", async (req, res) => {
   }
 });
 
+/**
+ * @openapi
+ * /api/users/{userid}:
+ *  delete:
+ *   summary: Delete specific user by id
+ *   description: Must be ADMIN
+ *   tags:
+ *     - Users
+ *   security:
+ *     - AuthHeader: []
+ *   parameters:
+ *      - name: userid
+ *        description: ID of user
+ *        in: path
+ *        required: true
+ *        type: number
+ *   responses:
+ *      200:
+ *        description: Success
+ *
+ */
 router.delete("/:userid", async (req, res) => {
   try {
     let us = await db.User.getUserById(req.params.userid);
@@ -63,6 +159,44 @@ router.delete("/:userid", async (req, res) => {
   }
 });
 
+/**
+ * @openapi
+ * /api/users/{userid}:
+ *  put:
+ *   summary: Update user
+ *   description: Must be ADMIN
+ *   tags:
+ *     - Users
+ *   security:
+ *     - AuthHeader: []
+ *   parameters:
+ *      - name: userid
+ *        description: ID of user
+ *        in: path
+ *        required: true
+ *        type: number
+ *   requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              username:
+ *                type: string
+ *                required: true
+ *              password:
+ *                type: string
+ *                required: true
+ *              role:
+ *                type: string
+ *                required: true
+ *                enum: ["customer","admin","chef"]
+ *   responses:
+ *      200:
+ *        description: Success
+ *
+ */
 router.put("/:userid", async (req, res) => {
   try {
     let us = await db.User.getUserById(req.params.userid);

@@ -245,6 +245,7 @@ router.delete(
  *            properties:
  *              status:
  *                type: string
+ *                enum: [pending,preparing,served,billed,paid]
  *              table_no:
  *                type: number
  *              billable_amount:
@@ -388,6 +389,8 @@ router.post("/:orderid/items", async (req, res) => {
  *        type: number
  *      - name: resolve
  *        in: query
+ *        type: string
+ *        enum: [false,true]
  *        description: if set to 'true' then the order will be marked as 'BILLED'. Once marked for billing, users will no longer be able to order items in it.
  *    responses:
  *      200:

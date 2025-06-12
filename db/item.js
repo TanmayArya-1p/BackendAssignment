@@ -164,5 +164,3 @@ export default class Item {
     );
   }
 }
-
-//TODO : OPENAPI SPEC WITH SWAGGER DOCS FOR CONTROLLER
