@@ -70,11 +70,8 @@ export async function deleteAllItemTags(item_id) {
   await db.query("DELETE FROM tag_rel WHERE item_id = ?", [item_id]);
 }
 
-
 export async function getAllTags() {
   let tags = await db.query("SELECT * FROM tags");
   if (!tags[0]) return [];
   return tags[0];
 }
-
-

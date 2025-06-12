@@ -46,5 +46,8 @@ router.get(
     docExpansion: "none",
   }),
 );
+router.get("/openapi.json", (req, res) => {
+  res.send(swaggerSpec);
+});
 
 export default router;
