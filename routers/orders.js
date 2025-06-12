@@ -37,7 +37,6 @@ router.post(
       let order = await db.OrderItems.bumpStatus(Number(req.params.orderitem));
       res.send({ message: `Bumped Status to ${order.status}` });
     } catch (err) {
-      console.log(err);
       res.status(500).send({ message: "Internal Server Error" });
     }
   },
