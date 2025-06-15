@@ -7,6 +7,9 @@ const conn = mysql
     database: "mvc",
     password: process.env.MYSQL_PASSWORD,
     port: process.env.MYSQL_PORT,
+    enableKeepAlive: true,
+    keepAliveInitialDelay: 0,
+    idleTimeout: 31536000000
   })
   .promise();
 

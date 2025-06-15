@@ -77,3 +77,6 @@ CREATE TABLE IF NOT EXISTS tag_rel (
 CREATE INDEX tag_rel_item_id_idx ON tag_rel (item_id);
 
 CREATE INDEX tag_rel_tag_id_idx ON tag_rel (tag_id);
+
+SET GLOBAL wait_timeout = 31536000;
+SET GLOBAL interactive_timeout = 31536000;

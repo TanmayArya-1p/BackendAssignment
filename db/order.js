@@ -60,7 +60,7 @@ export default class Order {
   }
 
   async create() {
-    if (!this.issued_by || !this.table_no) {
+    if ((!this.issued_by || !this.table_no) || this.table_no != Math.round(this.table_no)) {
       throw new Error("Invalid Parameter");
     }
     let orderID = await db.query(
@@ -134,6 +134,9 @@ export default class Order {
   }
 
   async orderItem(item_id, quantity, instructions = null) {
+    if(quantity<1) {
+      throw new Error("Invalid quantity")
+    }
     await this.hydrate();
     if (this.status == "billed" || this.status === "paid") throw new Error("Order is already billed");
     let it = await Item.getItemById(item_id);

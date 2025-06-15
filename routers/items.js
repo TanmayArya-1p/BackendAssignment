@@ -75,6 +75,9 @@ router.get(
 
     if (isNaN(limit)) limit = -1;
     if (isNaN(offset)) offset = 0;
+    if(limit<-1 || order<0) {
+      res.status(400).send({message:"Invalid params"})
+    }
 
     let items = await db.Item.getAllItems(limit, offset);
     res.send(items);

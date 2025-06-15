@@ -12,6 +12,7 @@ async function createOrderHandler() {
     alert("Please enter a proper table number");
     return;
   }
+
   let res = await fetch("/api/orders", {
     method: "POST",
     headers: {
@@ -21,6 +22,10 @@ async function createOrderHandler() {
       table_no: table_no,
     }),
   });
+  if(res.status !== 200) {
+    alert("Failed to create order")
+    return;
+  }
   res = await res.json();
   let orderID = res.id;
   await itemf.addItemsToOrder(orderID);
