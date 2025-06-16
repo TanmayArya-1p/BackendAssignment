@@ -137,7 +137,7 @@
                             <h2 class="text-lg font-bold ubuntu-bold"><%= items[i].name %></h2>
                             <p class="mt-2 text-gray-500"><%= items[i].description %></p>
                             <p class="mt-2 text-gray-800">Price: ₹<%= items[i].price %></p>
-                            <div id="tags" class="flex flex-row flex-wrap gap-2 mt-1">
+                            <div id="tags" class="flex overflow-x-auto flex-row gap-2 mt-1">
                                 <% for(let j=0; j<items[i].tags.length ; j++) { %>
                                     <span class="tag"><%= items[i].tags[j][1] %></span>
                                 <% } %>
