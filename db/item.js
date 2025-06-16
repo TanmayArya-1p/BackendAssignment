@@ -73,6 +73,7 @@ export default class Item {
 
   async delete() {
     await tags.deleteAllItemTags(this.id);
+    await db.query("DELETE FROM order_items WHERE item_id = ?", [this.id]);
     await db.query("DELETE FROM items WHERE id = ?", [this.id]);
     return this;
   }

@@ -207,5 +207,30 @@ viewsRouter.get("/users" , authMiddleware.authenticationMiddleware() , authMiddl
 })
 
 
+viewsRouter.get("/items" , authMiddleware.authenticationMiddleware() , authMiddleware.authorizationMiddleware(authUtils.ADMIN), async (req,res) => {
+    let items = await db.Item.getAllItems(-1,0);
+    let selectedTags = req.query.tags ? req.query.tags.split(",") : [];
+
+    let searchParam = req.query.search || "";
+    if (selectedTags.length > 0) {
+        items = items.filter(a=> a.tags.some(b => selectedTags.includes(b[1])));
+    }
+    if(searchParam !== "") {
+        items = items.filter(a => a.name.toLowerCase().includes(searchParam.toLowerCase()));
+    }
+
+    let page = paginate(items, req, "", 8);
+    items = page.filtered;
+    res.render("items", {
+        user: res.locals.user,
+        items: items,
+        error: DOMPurify(new JSDOM('<!DOCTYPE html>').window).sanitize(req.query.error || ""),
+        page: page,
+        selectedTags : selectedTags,
+        tags: (await db.Tags.getAllTags()).filter(a=>!selectedTags.includes(a.name)),
+    });
+})
+
+
 
 export default viewsRouter;
