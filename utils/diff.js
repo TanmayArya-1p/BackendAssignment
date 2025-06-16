@@ -41,3 +41,17 @@ export class DiffGenerator {
     return { added: added, deleted: deleted };
   }
 }
+
+
+export function subsetOf(subset, superset) {
+  if (subset.length > superset.length) return false;
+  let supersetHM = {};
+  for (let i = 0; i < superset.length; i++) {
+    supersetHM[superset[i]] = true;
+  }
+
+  for (let i = 0; i < subset.length; i++) {
+    if (!supersetHM[subset[i]]) return false;
+  }
+  return true;
+}

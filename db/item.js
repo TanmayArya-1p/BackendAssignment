@@ -158,8 +158,11 @@ export default class Item {
       tag_names,
     );
     if (!items[0]) return [];
-    return await Promise.all(
+    let ORresult =  await Promise.all(
       items[0].map(async (a) => await Item.getItemById(a.id)),
     );
+    let ANDres = ORresult.filter((a) => a.tags.length>=tag_names.length).filter((a) => utils.subsetOf(tag_names,a.tags.map(b => b[1])));
+    return ANDres;
   }
 }
+
