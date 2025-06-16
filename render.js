@@ -48,13 +48,16 @@ viewsRouter.get(
 
     switch (res.locals.user.role) {
       case "customer":
+        let searchParam = req.query.search || "";
         orders = orders.filter(a=>orderFilters.includes(a.status))
-
         if (selectedTags.length > 0) {
           items = await db.Item.getItemsofTag(selectedTags, -1, 0);
         } else {
           items = await db.Item.getAllItems(-1, 0);
         }
+
+        if(searchParam !== "") items=items.filter(a => a.name.toLowerCase().includes(searchParam.toLowerCase()));
+
         page = paginate(items, req);
         items = page.filtered;
         res.render(`customer-home`, {
@@ -213,7 +216,7 @@ viewsRouter.get("/items" , authMiddleware.authenticationMiddleware() , authMiddl
 
     let searchParam = req.query.search || "";
     if (selectedTags.length > 0) {
-        items = items.filter(a=> a.tags.some(b => selectedTags.includes(b[1])));
+        items = await db.Item.getItemsofTag(selectedTags);
     }
     if(searchParam !== "") {
         items = items.filter(a => a.name.toLowerCase().includes(searchParam.toLowerCase()));

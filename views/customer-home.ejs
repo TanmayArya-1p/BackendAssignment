@@ -38,6 +38,13 @@
             url.searchParams.set('tags', selectedTags.join(','));
             window.location.href = url.toString();
         }
+
+        function searchItems() {
+            const searchInput = document.getElementById('search-input').value.trim();
+            const url = new URL(window.location.href);
+            url.searchParams.set('search', searchInput);
+            window.location.href = url.toString();
+        }
     </script>
 </head>
 <body>
@@ -104,6 +111,11 @@
         
         <div id="items-meta-container">
             <div class="mt-5 ubuntu-bold text-2xl ">Items Available</div>
+
+            <div class="flex flex-row gap-2 items-center mt-3">
+                <input type="text" id="search-input" placeholder="Search Items" class="sbutton">
+                <button class="sbutton" onclick="searchItems()">Search</button>
+            </div>
 
             <div id="tags-container" class="flex flex-row mt-5  gap-2">
                 <div class="ubuntu-regular text-xl">Filters: </div>
