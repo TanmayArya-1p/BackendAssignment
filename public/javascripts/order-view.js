@@ -20,6 +20,9 @@ async function initPriceIndex() {
 }
 
 async function billHandler(orderid) {
+  if(!confirm("Are you sure you want to resolve the bill? Once resolved, you cannot add more items to this order.")) {
+    return;
+  }
   await fetch(`/api/orders/${orderid}/bill?resolve=true`, {
       method: 'GET'
   })
