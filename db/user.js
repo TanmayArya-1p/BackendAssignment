@@ -1,5 +1,6 @@
 import db from "./db.js";
 import bcrypt from "bcrypt";
+import Order from "./order.js";
 
 export default class User {
   constructor(p) {
@@ -121,6 +122,12 @@ export default class User {
   }
 
   async delete() {
+    let associatedOrders = await Order.getAllOrdersByUser(this,-1,0)
+    if (associatedOrders.length > 0) {
+      for(const order of associatedOrders) {
+        await order.delete();
+      }
+    }
     await db.query("DELETE FROM users WHERE id = ?", [this.id]);
     return this;
   }

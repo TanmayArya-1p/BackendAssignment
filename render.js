@@ -1,4 +1,5 @@
 import express from "express";
+import * as authUtils from "./utils/auth.js";
 import * as authMiddleware from "./middleware/auth.js";
 import db from "./db/index.js";
 import { orderColourMap, paginate } from "./utils/misc.js";
@@ -6,7 +7,6 @@ import { JSDOM } from 'jsdom';
 import DOMPurify from 'dompurify';
 
 let viewsRouter = express.Router();
-
 
 viewsRouter.get("/", function (req, res) {
   res.render("index");
@@ -139,7 +139,6 @@ viewsRouter.get(
     }
   },
 );
-
 viewsRouter.get(
   "/order/create",
   authMiddleware.authenticationMiddleware(false, true),
@@ -180,6 +179,32 @@ viewsRouter.get(
     });
   },
 );
+
+
+viewsRouter.get("/users" , authMiddleware.authenticationMiddleware() , authMiddleware.authorizationMiddleware(authUtils.ADMIN), async (req,res) => {
+    let users = await db.User.getAllUsers(-1,0);
+    let selectedRoles = req.query.roleFilters ? req.query.roleFilters.split(",") : [];
+
+    let searchParam = req.query.search || "";
+
+    if (selectedRoles.length > 0) {
+        users = users.filter(a => selectedRoles.includes(a.role));
+    }
+    if(searchParam !== "") {
+        users = users.filter(a => a.username.toLowerCase().includes(searchParam.toLowerCase()));
+    }
+
+    let page = paginate(users, req, "", 8);
+    users = page.filtered;
+    res.render("users", {
+        user: res.locals.user,
+        users: users,
+        error: DOMPurify(new JSDOM('<!DOCTYPE html>').window).sanitize(req.query.error || ""),
+        page: page,
+        selectedRoles : selectedRoles,
+        roles: ["admin", "chef", "customer"].filter(a=>!selectedRoles.includes(a))
+    });
+})
 
 
 
