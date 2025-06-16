@@ -9,9 +9,9 @@ window.itemf = itemf;
 
 async function createOrderHandler() {
   let table_no = Number(document.getElementById("table_no").value.trim());
-  if (isNaN(table_no) || table_no <= 0) {
+  if (isNaN(table_no) || table_no <= 0 || table_no > 100) {
     
-    displayError("Please enter a proper table number");
+    displayError("Please enter a proper table number (Table No must be between 1 and 100 [Inclusive])");
     return;
   }
 

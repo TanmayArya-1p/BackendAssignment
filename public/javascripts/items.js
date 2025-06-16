@@ -88,7 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
             url.searchParams.delete('error');
             window.location.href = url.toString();
         } else {
-            displayError("Failed to create item");
+            displayError("Failed to create Item with Error: " + (await res.json()).message);
         }
     })
 })

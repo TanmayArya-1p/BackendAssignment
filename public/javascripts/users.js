@@ -45,7 +45,7 @@ async function createUserHandler() {
         body: JSON.stringify({ username, password, role }),
     });
     if(res.status !== 200) {
-        displayError("Error creating user status:"+res.status);
+        displayError("Error creating User: Username already exists");
         return;
     } else {
         window.location="/users";

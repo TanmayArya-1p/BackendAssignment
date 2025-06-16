@@ -34,7 +34,7 @@ async function payHandler(orderid) {
   let amt = document.getElementById("paid-amount").value.trim();
   amt = Number(amt);
   if(isNaN(amt) || amt <= 0) {
-    displayError("Invalid amount entered. Please enter a valid amount.");
+    displayError("Invalid amount entered");
     return;
   }
   let res = await fetch(`/api/orders/${orderid}/bill/pay`, {

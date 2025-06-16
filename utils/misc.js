@@ -8,7 +8,7 @@ let orderColourMap = {
 
 function paginate(arr, req,id="",pageSize=6) {
   const pageNo = Math.min(
-    req.query["page"+id] ? parseInt(req.query.page) : 0,
+    req.query["page"+id] ? parseInt(req.query["page"+id]) : 0,
     Math.ceil(arr.length / pageSize) - 1,
   );
   return {

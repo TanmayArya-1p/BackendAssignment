@@ -147,6 +147,9 @@ router.post("/", async (req, res) => {
   if (!table_no) {
     return res.status(400).send({ message: "Table number is required" });
   }
+  if(!((0 < table_no) && (table_no <= 100))) {
+    return res.status(400).send({ message: "Table number must be between 1 and 100" });
+  }
   try {
     let order = new db.Order({
       table_no: table_no,
