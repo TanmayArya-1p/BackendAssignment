@@ -12,6 +12,9 @@ import { fileURLToPath } from "node:url";
 import * as authMiddleware from "./middleware/auth.js";
 import db from "./db/index.js";
 import { orderColourMap, paginate } from "./utils/misc.js";
+import { JSDOM } from 'jsdom';
+import DOMPurify from 'dompurify';
+import { error } from "node:console";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -29,10 +32,16 @@ app.get("/", function (req, res) {
   res.render("index");
 });
 app.get("/login", function (req, res) {
-  res.render("login");
+  res.render("login" , 
+    {
+      error: DOMPurify(new JSDOM('<!DOCTYPE html>').window).sanitize(req.query.error || ""),
+    }
+  );
 });
 app.get("/register", function (req, res) {
-  res.render("register");
+  res.render("register",{
+    error: DOMPurify(new JSDOM('<!DOCTYPE html>').window).sanitize(req.query.error || ""),
+  });
 });
 
 app.get(
@@ -49,13 +58,18 @@ app.get(
     if (res.locals.user.role === "customer") {
       orders = await db.Order.getAllOrdersByUser(res.locals.user);
     } else {
-      orders = await db.Order.getAllOrders();
+      orders = await db.Order.getAllOrders(-1);
     }
 
     let items = null;
     let page = null;
+
+    let orderFilters = req.query.orderFilters ? req.query.orderFilters.split(",") : ["pending", "preparing", "served", "billed"];
+
     switch (res.locals.user.role) {
       case "customer":
+        orders = orders.filter(a=>orderFilters.includes(a.status))
+
         if (selectedTags.length > 0) {
           items = await db.Item.getItemsofTag(selectedTags, -1, 0);
         } else {
@@ -71,9 +85,17 @@ app.get(
           tags: await db.Tags.getAllTags(),
           selectedTags: selectHM,
           page: page,
+          error: DOMPurify(new JSDOM('<!DOCTYPE html>').window).sanitize(req.query.error || ""),
+          selectedStatusTags: orderFilters,
+          statustags:["pending", "preparing", "served", "billed"].map(a=>!orderFilters.includes(a) ? a : null).filter(a=>a!==null),
         });
         break;
       case "chef":
+        orders = orders.filter(a=>a.status!=="paid")
+        var unorders = orders.filter((a)=>a.status==="billed")
+        console.log(unorders)
+        orders = orders.filter(a=>orderFilters.includes(a.status))
+
         page = paginate(orders, req);
         orders = page.filtered;
 
@@ -101,12 +123,24 @@ app.get(
           orderColourMap: orderColourMap,
           page: page,
           itemHM: itemHM,
+          error: DOMPurify(new JSDOM('<!DOCTYPE html>').window).sanitize(req.query.error || ""),
+          selectedStatusTags: orderFilters,
+          statustags:["pending", "preparing", "served", "billed"].map(a=>!orderFilters.includes(a) ? a : null).filter(a=>a!==null),
+          unorders: unorders,
         });
         break;
 
       case "admin":
+        let paidorders = orders.filter(a=>a.status==="paid")
+        orders = orders.filter(a=>a.status!=="paid")
+        var unorders = orders.filter((a)=>a.status==="billed")
+        orders = orders.filter(a=>orderFilters.includes(a.status))
+        console.log(orders.length, paidorders.length)
         page = paginate(orders, req);
         orders = page.filtered;
+
+        let paidPage = paginate(paidorders,req,"paid")
+        paidorders = paidPage.filtered
 
         items = await db.Item.getAllItems(-1, 0);
 
@@ -116,6 +150,12 @@ app.get(
           orderColourMap: orderColourMap,
           page: page,
           items: items,
+          paidorders: paidorders,
+          paidPage:paidPage,
+          error: DOMPurify(new JSDOM('<!DOCTYPE html>').window).sanitize(req.query.error || ""),
+          selectedStatusTags: orderFilters,
+          statustags:["pending", "preparing", "served", "billed"].map(a=>!orderFilters.includes(a) ? a : null).filter(a=>a!==null),
+          unorders: unorders,
         });
         break;
     }
@@ -130,6 +170,7 @@ app.get(
       user: res.locals.user,
       items: await db.Item.getAllItems(),
       tags: await db.Tags.getAllTags(),
+      error :  DOMPurify(new JSDOM('<!DOCTYPE html>').window).sanitize(req.query.error || ""),
     });
   },
 );
@@ -157,6 +198,7 @@ app.get(
       order: order,
       orderColourMap: orderColourMap,
       tags: await db.Tags.getAllTags(),
+      error: DOMPurify(new JSDOM('<!DOCTYPE html>').window).sanitize(req.query.error || ""),
     });
   },
 );

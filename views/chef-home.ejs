@@ -12,6 +12,8 @@
     <script src="/javascripts/refresh.js" defer></script>
     <script src="/javascripts/utils.js" defer type="module"></script>
     <script src="/javascripts/navigation.js" defer type="module"></script>
+    <script src="/javascripts/error.js" defer type="module"></script>
+
     <script defer>
         function bumpItemStatus(itemId) {
             fetch(`api/orders/item/${itemId}/bump`, {
@@ -40,11 +42,36 @@
         </div>
     </nav>
 
+    <% if(error != "") { %>
+
+        <div id="error-container" class="flex flex-col gap-2 mt-4 ml-12 rounded bg-red-200 p-2 w-fit">
+            <div class="flex flex-row justify-between items-center">
+                <div class="ubuntu-bold text-red-600">
+                    Error: <span id="error-message"><%= error %></span>
+                </div>
+                <button id="toggle-error-btn" onclick="toggleError()" class="text-sm ml-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    <% } %>
+
     <div id="content-container" class="mt-8 ml-12 flex flex-row flex-wrap gap-8">
 
 
         <div id="order-meta-container" class="flex flex-col gap-2 max-w-5xl">
             <div class="ubuntu-bold text-2xl">All Orders</div>
+            <div id="tags-container" class="flex flex-row mt-5 gap-2">
+                <div class="ubuntu-regular text-xl">Filters: </div>
+                <% for(let j=0; j<selectedStatusTags.length ; j++) { %>
+                    <button id="<%= selectedStatusTags[j] %>-toggler" onclick="toggleOrderFilter('<%= selectedStatusTags[j] %>')"  class="tag tag-selector tag-selected"><%= selectedStatusTags[j] %></button>
+                <% } %>
+                <% for(let j=0; j<statustags.length ; j++) { %>
+                    <button id="<%= statustags[j] %>-toggler" onclick="toggleOrderFilter('<%= statustags[j] %>')"  class="tag tag-selector"><%= statustags[j] %></button>
+                <% } %>
+            </div>
             <div id="orders-container" class="flex flex-row flex-wrap gap-3 items-center">
                 <% for(let i=0; i<orders.length ; i++) { %>
                     <a href=<%= `/order/${orders[i].id}` %>  class="order-card">
@@ -70,7 +97,16 @@
                 </button>
             </div>
 
-            <% let unorders = orders.filter((a)=>a.status==="billed") %>
+                <div id="navigate-to-order" class="ubuntu-bold mt-5 p-2 w-fit flex flex-row gap-2 items-center bg-white shadow-md border-2 rounded">
+                    Navigate to Order No:
+                    <input type="number" id="navigate-order-id" placeholder="Order No" class="smoll-button w-30 mx-2">
+                    <button class="sbutton" onclick="navigateToOrder()">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
+                        </svg>
+                    </button>
+                </div>
+
             <% if(unorders.length !== 0)  { %>
                 <div id="unpaid-bills-meta-container" class="flex flex-col gap-2">
                     <div class="mt-5 ubuntu-bold text-2xl">Unpaid Bills</div>

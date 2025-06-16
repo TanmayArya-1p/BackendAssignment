@@ -15,8 +15,10 @@ window.addEventListener("DOMContentLoaded", () => {
       if (res.status === 200) {
         alert("Registered User Successfully");
         window.location.href = "/login";
+        return;
       } else {
-        alert("Username already exists. Try another username.");
+        window.location.href = "/register?error=Username already exists";
+        return;
       }
     });
 });

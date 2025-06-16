@@ -12,8 +12,10 @@ window.addEventListener("DOMContentLoaded", () => {
     });
     if (res.status === 200) {
       window.location.href = "/home";
+      return;
     } else {
-      alert("Invalid username or password. Please try again.");
+      window.location.href = "/login?error=Invalid Username or Password";
+      return;
     }
   });
 });

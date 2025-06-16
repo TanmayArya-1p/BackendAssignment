@@ -12,6 +12,8 @@
     <script src="/javascripts/refresh.js" defer></script>
     <script src="/javascripts/utils.js" defer type="module"></script>
     <script src="/javascripts/navigation.js" defer type="module"></script>
+    <script src="/javascripts/error.js" defer type="module"></script>
+
 
     <script defer>
         let selectedTags = [];
@@ -50,11 +52,33 @@
     <a class="text-teal-500"></a>
     <a class="text-green-500"></a>
 
+    <% if(error != "") { %>
 
+        <div id="error-container" class="flex flex-col gap-2 mt-4 ml-12 rounded bg-red-200 p-2 w-fit">
+            <div class="flex flex-row justify-between items-center">
+                <div class="ubuntu-bold text-red-600">
+                    Error: <span id="error-message"><%= error %></span>
+                </div>
+                <button id="toggle-error-btn" onclick="toggleError()" class="text-sm ml-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    <% } %>
     <div id="content-container" class="ml-12">
         <div id="orders-meta-container">
             <div class="mt-5 ubuntu-bold text-2xl">Your Orders</div>
-
+            <div id="tags-container" class="flex flex-row mt-5 gap-2">
+                <div class="ubuntu-regular text-xl">Filters: </div>
+                <% for(let j=0; j<selectedStatusTags.length ; j++) { %>
+                    <button id="<%= selectedStatusTags[j] %>-toggler" onclick="toggleOrderFilter('<%= selectedStatusTags[j] %>')"  class="tag tag-selector tag-selected"><%= selectedStatusTags[j] %></button>
+                <% } %>
+                <% for(let j=0; j<statustags.length ; j++) { %>
+                    <button id="<%= statustags[j] %>-toggler" onclick="toggleOrderFilter('<%= statustags[j] %>')"  class="tag tag-selector"><%= statustags[j] %></button>
+                <% } %>
+            </div>
             <div id="orders-container" class="flex flex-row mt-5 flex-wrap gap-3 items-center">
                 <% for(let i=0; i<orders.length ; i++) { %>
                     <a href=<%= `/order/${orders[i].id}` %>  class="order-card">

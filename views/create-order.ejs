@@ -12,6 +12,7 @@
     <script src="/javascripts/refresh.js" defer></script>
     <script src="/javascripts/create-order.js" defer type="module"></script>
     <script src="/javascripts/utils.js" defer type="module"></script>
+    <script src="/javascripts/error.js" defer type="module"></script>
 
 </head>
 <body>
@@ -24,7 +25,25 @@
 
     </nav>
 
+    <% if(error != "") { %>
+
+        <div id="error-container" class="flex flex-col gap-2 mt-4 ml-8 rounded bg-red-200 p-2 w-fit">
+            <div class="flex flex-row justify-between items-center">
+                <div class="ubuntu-bold text-red-600">
+                    Error: <span id="error-message"><%= error %></span>
+                </div>
+                <button id="toggle-error-btn" onclick="toggleError()" class="text-sm ml-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    <% } %>
+
     <div id="page-container" class="mt-8 ml-8">
+
+
         <div class="flex flex-col gap-4">
             <div class="ubuntu-regular text-xl bg-white border-2 rounded-md p-2 max-w-xl gap-0">
                 <span class="mr-4">Enter Your</span>     

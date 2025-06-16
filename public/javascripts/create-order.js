@@ -1,4 +1,5 @@
 import ItemFilter from "./item-filter.js";
+import { displayError } from "./error.js";
 
 let itemf = new ItemFilter(
   document.getElementById("item-selector"),
@@ -9,7 +10,8 @@ window.itemf = itemf;
 async function createOrderHandler() {
   let table_no = Number(document.getElementById("table_no").value.trim());
   if (isNaN(table_no) || table_no <= 0) {
-    alert("Please enter a proper table number");
+    
+    displayError("Please enter a proper table number");
     return;
   }
 
@@ -23,12 +25,12 @@ async function createOrderHandler() {
     }),
   });
   if(res.status !== 200) {
-    alert("Failed to create order")
+    displayError("Failed to create order")
     return;
   }
   res = await res.json();
   let orderID = res.id;
-  await itemf.addItemsToOrder(orderID);
-  window.location.href = `/order/${orderID}`;
+  let addRes = await itemf.addItemsToOrder(orderID);
+  if(addRes !== -1) window.location.href = `/order/${orderID}`
 }
 window.createOrderHandler = createOrderHandler;

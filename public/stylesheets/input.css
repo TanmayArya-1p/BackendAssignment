@@ -91,6 +91,7 @@ nav {
   gap:1rem;
   align-items: center;
   justify-content: space-between;
+  min-width: 22rem;
 }
 
 .order-card:hover {
@@ -157,6 +158,12 @@ nav {
   text-align: center;
   font-family: "Ubuntu", sans-serif;
   padding: 0.1rem 0.5rem;
+  transition: transform 0.1s linear;
+}
+
+.tag:hover {
+  transform: translateY(-0.1rem);
+  transition: transform 0.1s linear;
 }
 
 .tag-selected {

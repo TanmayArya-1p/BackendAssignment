@@ -1,3 +1,4 @@
+import { displayError } from "./error.js";
 import ItemFilter from "./item-filter.js";
 
 let ctrMap = {};
@@ -17,5 +18,38 @@ async function initPriceIndex() {
     priceIndex[item.id] = item.price;
   });
 }
+
+async function billHandler(orderid) {
+  await fetch(`/api/orders/${orderid}/bill?resolve=true`, {
+      method: 'GET'
+  })
+  window.location.reload()
+}
+window.billHandler = billHandler;
+
+async function payHandler(orderid) {
+  let amt = document.getElementById("paid-amount").value.trim();
+  amt = Number(amt);
+  if(isNaN(amt) || amt <= 0) {
+    displayError("Invalid amount entered. Please enter a valid amount.");
+    return;
+  }
+  let res = await fetch(`/api/orders/${orderid}/bill/pay`, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+          amount: amt
+      })
+  })
+  if(res.status !== 200) {
+    displayError("Invalid Amount. Please try again.");
+    return;
+  }
+  window.location.reload()
+}
+window.payHandler = payHandler;
+
 
 initPriceIndex();

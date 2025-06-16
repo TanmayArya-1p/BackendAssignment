@@ -1,3 +1,5 @@
+import { displayError } from "./error.js";
+
 export default class ItemFilter {
   constructor(item_container, template) {
     this.items = [];
@@ -143,8 +145,8 @@ export default class ItemFilter {
       }
     }
     if (items.length === 0) {
-      alert("No items selected");
-      return;
+      displayError("No items selected");
+      return -1;
     }
     for (const i of items) {
       await fetch(`/api/orders/${order_id}/items`, {

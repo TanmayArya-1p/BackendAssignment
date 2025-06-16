@@ -12,40 +12,11 @@
     <script src="/javascripts/refresh.js" defer></script>
     <script src="/javascripts/order-view.js" defer type="module"></script>
     <script src="/javascripts/utils.js" defer type="module"></script>
+    <script src="/javascripts/error.js" defer type="module"></script>
+
     <% if(user.role === "admin")  { %>
         <script src="/javascripts/delete-order.js" defer type="module"></script>
     <% } %>
-
-    <script>
-        async function billHandler(orderid) {
-            if(!confirm("Are you sure you want to bill this order? Once you bill the order you will no longer be able to add items to this order.")) {
-                return;
-            }
-            await fetch(`/api/orders/${orderid}/bill?resolve=true`, {
-                method: 'GET'
-            })
-            window.location.reload()
-        }
-
-        async function payHandler(orderid) {
-            let amt = prompt("Enter the amount paid by issuer of order:");
-            amt = Number(amt);
-            if(isNaN(amt) || amt <= 0) {
-                alert("Invalid amount entered. Please enter a valid amount.");
-                return;
-            }
-            await fetch(`/api/orders/${orderid}/bill/pay`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    amount: amt
-                })
-            })
-            window.location.reload()
-        }
-    </script>
 
 </head>
 <body>
@@ -58,6 +29,20 @@
 
     </nav>
     <div class="hidden"></div>
+    <% if(error != "") { %>
+        <div id="error-container" class="flex flex-col gap-2 mt-4 ml-4 rounded bg-red-200 p-2 w-fit">
+            <div class="flex flex-row justify-between items-center">
+                <div class="ubuntu-bold text-red-600">
+                    Error: <span id="error-message"><%= error %></span>
+                </div>
+                <button id="toggle-error-btn" onclick="toggleError()" class="text-sm ml-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    <% } %>
     <div id="page-container" class="mt-8 ml-4 mb-30">
 
         <div class="ubuntu-bold text-3xl">
@@ -127,11 +112,14 @@
                         <td></td>                            
                         <td class="px-6 py-4 text-right">Total</td>
                         <td class="px-6 py-4">₹<%= total %></td>
-                        <td> 
+                        <td class="px-2"> 
                             <% if(order.status!=="billed" && order.status!=="paid") { %>
                                 <button class="smoll-button mx-2" onclick="billHandler('<%= order.id %>')">Bill Order</button>
                             <% } else if(order.status==="billed" && (user.role==="chef" || user.role==="admin")) { %>
                                 <button class="smoll-button mx-2" onclick="payHandler('<%= order.id %>')">Mark as Paid</button>
+                                <input type="number" id="paid-amount" placeholder="Amount Paid" class="smoll-button w-40 mx-2">
+                            <% } else if(order.status==="paid") { %>
+                                <span>Tip: ₹<%= order.tip %></span>
                             <% } %>
                         </td>
                     </tr>
