@@ -32,7 +32,10 @@ app.use("/api/orders", ordersRouter);
 app.use("/api/swagger", swaggerRouter);
 
 app.use(function (req, res, next) {
-  res.status(404).send("404 Not Found");
+  res.render("error" , {
+    message: "Page Not Found",
+    desc: ""
+  })
 });
 
 export default app;

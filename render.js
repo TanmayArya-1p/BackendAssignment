@@ -184,7 +184,7 @@ viewsRouter.get(
 );
 
 
-viewsRouter.get("/users" , authMiddleware.authenticationMiddleware() , authMiddleware.authorizationMiddleware(authUtils.ADMIN), async (req,res) => {
+viewsRouter.get("/users" , authMiddleware.authenticationMiddleware() , authMiddleware.authorizationMiddleware(authUtils.ADMIN,true), async (req,res) => {
     let users = await db.User.getAllUsers(-1,0);
     let selectedRoles = req.query.roleFilters ? req.query.roleFilters.split(",") : [];
 
@@ -210,7 +210,7 @@ viewsRouter.get("/users" , authMiddleware.authenticationMiddleware() , authMiddl
 })
 
 
-viewsRouter.get("/items" , authMiddleware.authenticationMiddleware() , authMiddleware.authorizationMiddleware(authUtils.ADMIN), async (req,res) => {
+viewsRouter.get("/items" , authMiddleware.authenticationMiddleware() , authMiddleware.authorizationMiddleware(authUtils.ADMIN,true), async (req,res) => {
     let items = await db.Item.getAllItems(-1,0);
     let selectedTags = req.query.tags ? req.query.tags.split(",") : [];
 
