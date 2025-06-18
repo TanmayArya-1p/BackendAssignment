@@ -9,7 +9,7 @@ import logger from "morgan";
 import path from "path";
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import viewsRouter from "./render.js";
+import viewsRouter from "./routers/render.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();

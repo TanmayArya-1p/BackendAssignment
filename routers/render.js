@@ -1,8 +1,8 @@
 import express from "express";
-import * as authUtils from "./utils/auth.js";
-import * as authMiddleware from "./middleware/auth.js";
-import db from "./db/index.js";
-import { orderColourMap, paginate } from "./utils/misc.js";
+import * as authUtils from "../utils/auth.js";
+import * as authMiddleware from "../middleware/auth.js";
+import db from "../db/index.js";
+import { orderColourMap, paginate } from "../utils/misc.js";
 import { JSDOM } from 'jsdom';
 import DOMPurify from 'dompurify';
 
