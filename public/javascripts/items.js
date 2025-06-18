@@ -57,9 +57,12 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
+
+        let filename = null;
         if (image) {
+            filename = name + "." + image.name.split(".").pop();
             const formData = new FormData();
-            formData.append("image", image);
+            formData.append("image", image, filename);
             const uploadRes = await fetch("/api/items/upload", {
                 method: "POST",
                 body: formData,
@@ -72,8 +75,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
         let candBody = { name, price, tags, description }
-
-        if(image) candBody.image =  "/images/" + image.name;
+        if(image)  {
+            candBody.image =  "/images/" + filename;
+        }
+            
 
         let res = await fetch("/api/items", {
             method: "POST",
