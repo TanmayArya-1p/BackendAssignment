@@ -1,5 +1,10 @@
 import db from "./db.js";
 
+// JTI (JSON Token Identifer/ JSON ID) is a unique identifier for refresh tokens.
+// JTI is officially defined in the JWT specificiation as a claim that provides a unique identifier for a JWT token.
+// https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.7
+
+
 export async function checkJti(jti, user, del = false) {
   const [rows] = await db.query(
     "SELECT * FROM refresh_jti WHERE jti = ? AND issued_by = ?",

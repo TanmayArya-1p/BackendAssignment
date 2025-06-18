@@ -31,7 +31,7 @@ app.use("/api/users", usersRouter);
 app.use("/api/orders", ordersRouter);
 app.use("/api/swagger", swaggerRouter);
 
-app.use(function (req, res, next) {
+app.use("/",function (req, res, next) {
   res.render("error" , {
     message: "Page Not Found",
     desc: ""
