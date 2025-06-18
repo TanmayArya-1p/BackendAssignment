@@ -132,7 +132,7 @@
             <div id="" class="flex flex-row flex-wrap mt-5  gap-3 items-center w-[80%]">
                 <% for(let i=0; i<items.length ; i++) { %>
                     <div href=<%= `/items/${items[i].id}` %>  class="item-card">
-                        <img src="<%= items[i].image %>" style="height: 6rem; width: auto;">
+                        <img src="<%= items[i].image %>" style="width: 9rem; max-height: 10rem;">
                         <div>
                             <h2 class="text-lg font-bold ubuntu-bold"><%= items[i].name %></h2>
                             <p class="mt-2 text-gray-500"><%= items[i].description %></p>
