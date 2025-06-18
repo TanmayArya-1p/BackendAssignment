@@ -152,6 +152,9 @@ router.post("/", async (req, res) => {
 router.delete("/:userid", async (req, res) => {
   try {
     let us = await db.User.getUserById(req.params.userid);
+    if(us.username === "admin") {
+      return res.status(400).send({ message: "Cannot delete admin user" });
+    }
     await us.delete();
     res.status(200).send({ message: "Successfuly deleted user", user: us });
   } catch (err) {
@@ -208,6 +211,11 @@ router.put("/:userid", async (req, res) => {
       role: req.body.role,
     };
     if (req.body.password) updobj.password = req.body.password;
+
+    if(us.username === "admin" && ((!updobj.username || updobj.username !== "admin") || (!updobj.role || updobj.role !== "admin"))) {
+      return res.status(400).send({ message: "Cannot change default admin username or role" });
+    }
+
     await us.updateUser(updobj);
 
     res.status(200).send({ message: "Successfuly updated user", user: us });
